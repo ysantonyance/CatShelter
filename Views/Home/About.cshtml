@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<style>
+    body { background-color: #f0f0f0; }
+    .page-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
+        <h2 class="fw-bold mb-0" style="color: #7a3e42;">About Paws & Hearts</h2>
+        <p class="mb-0 small" style="color: #7a3e42;">A safe haven for cats in need — run by people who care.</p>
+    </div>
+
+    <div class="p-4 p-md-5">
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-5" style="background-color: #fef6f7;">
+            <h4 class="fw-bold mb-3" style="color: #7a3e42;">Our Mission</h4>
+            <p class="text-muted">
+                Paws &amp; Hearts Cat Shelter was founded with one goal in mind: to give every
+                cat — regardless of age, breed, or health condition — a second chance at a happy life.
+                We rescue stray and abandoned cats, provide veterinary care, and work tirelessly
+                to match each cat with a loving, permanent home.
+            </p>
+            <p class="text-muted mb-0">
+                Our dedicated team of staff and volunteers is passionate about feline welfare.
+                We believe every purr matters and every cat deserves to feel safe and loved.
+            </p>
+        </div>
+
+        <h4 class="fw-bold text-center mb-4" style="color: #7a3e42;">What We Do</h4>
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4"
+                     style="background-color: #fef6f7;">
+                    <h5 class="fw-bold mt-2" style="color: #7a3e42;">Rescue & Shelter</h5>
+                    <p class="text-muted small">
+                        We take in stray, abandoned, and surrendered cats and provide them with
+                        a safe, warm place to stay.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4"
+                     style="background-color: #fef6f7;">
+                    <h5 class="fw-bold mt-2" style="color: #7a3e42;">Veterinary Care</h5>
+                    <p class="text-muted small">
+                        Every cat in our care receives health assessments, vaccinations,
+                        and treatment as needed before being put up for adoption.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4"
+                     style="background-color: #fef6f7;">
+                    <h5 class="fw-bold mt-2" style="color: #7a3e42;">Adoption</h5>
+                    <p class="text-muted small">
+                        We carefully match cats with responsible adopters and provide
+                        ongoing support to ensure a smooth transition to their new home.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounded-4 p-4 p-md-5 text-center" style="background-color: #d4edda;">
+            <h4 class="fw-bold mb-2" style="color: #2e5e3e;">Ready to Make a Difference?</h4>
+            <p class="mb-4" style="color: #4a7c59;">
+                Whether you want to adopt, volunteer, or simply learn more — we'd love to hear from you.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <a asp-controller="Cats" asp-action="Index"
+                   class="btn fw-semibold px-4"
+                   style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                    Meet Our Cats
+                </a>
+                <a asp-controller="Adoptions" asp-action="Create"
+                   class="btn fw-semibold px-4"
+                   style="background-color: #fff; color: #2e5e3e; border: 1px solid #b8dfc4;">
+                    Start Adopting
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
+</div>

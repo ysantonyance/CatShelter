@@ -35,10 +35,11 @@ namespace CatShelter.Controllers
             }
 
             var catCare = await _context.CatCare
-                .Include(c => c.Care)
-                .Include(c => c.Cat)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(cc => cc.Cat)
+                    .ThenInclude(c => c.Breed)
+                .Include(cc => cc.Care)
+                .Include(cc => cc.User)
+                .FirstOrDefaultAsync(cc => cc.Id == id);
             if (catCare == null)
             {
                 return NotFound();
@@ -50,9 +51,9 @@ namespace CatShelter.Controllers
         // GET: CatCares/Create
         public IActionResult Create()
         {
-            ViewData["CareId"] = new SelectList(_context.Care, "Id", "Id");
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewBag.Cares = _context.Care.ToList();
+            ViewBag.Cats = _context.Cat.Include(c => c.Breed).ToList();
+            ViewBag.Users = _context.Users.ToList();
             return View();
         }
 
@@ -141,10 +142,11 @@ namespace CatShelter.Controllers
             }
 
             var catCare = await _context.CatCare
-                .Include(c => c.Care)
-                .Include(c => c.Cat)
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(cc => cc.Cat)
+                    .ThenInclude(c => c.Breed)  
+                .Include(cc => cc.Care)         
+                .Include(cc => cc.User)         
+                .FirstOrDefaultAsync(cc => cc.Id == id);
             if (catCare == null)
             {
                 return NotFound();

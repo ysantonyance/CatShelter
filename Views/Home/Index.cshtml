@@ -1,8 +1,237 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home — Paws & Hearts Cat Shelter";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
+
+    .page-wrapper {
+        max-width: 1200px;
+        margin: 30px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <nav class="navbar navbar-expand-lg" style="background-color: #f9c6ce;">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#" style="color: #7a3e42;">Paws & Hearts</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cats" style="color: #7a3e42;">Our Cats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#adoptions" style="color: #7a3e42;">Adoptions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#care" style="color: #7a3e42;">Care</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-action="About" class="nav-link" style="color: #7a3e42;">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div style="background-color: #d4edda; padding: 60px 40px;">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="fw-semibold" style="color: #4a7c59;">Welcome to Our Shelter</p>
+                <h1 class="display-5 fw-bold mb-3" style="color: #2e5e3e;">
+                    Every Cat Deserves a Loving Home
+                </h1>
+                <p class="text-muted mb-4">
+                    We rescue, care for, and rehome cats in need. Browse our residents,
+                    learn about breeds, or start your adoption journey today.
+                </p>
+                <a asp-controller="Cats" asp-action="Index"
+                       class="btn btn-lg me-2 fw-semibold"
+                       style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                    Meet Our Cats
+                </a>
+                <a asp-controller="Adoptions" asp-action="Create"
+                       class="btn btn-lg btn-outline-secondary">
+                    Start Adopting
+                </a>
+            </div>
+            <div class="col-md-6 text-center mt-4 mt-md-0">
+                <img src="https://images.unsplash.com/photo-1628655748136-0a28048469cc?w=600&q=80"
+                     alt="Cat at shelter"
+                     class="img-fluid rounded-4 shadow"
+                     style="max-height: 400px; width: 100%; object-fit: cover;" />
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color: #f9c6ce; padding: 20px 40px;">
+        <div class="row text-center">
+            <div class="col-6 col-md-3 mb-2 mb-md-0">
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">47</h4>
+                <small style="color: #7a3e42;">Cats in Our Care</small>
+            </div>
+            <div class="col-6 col-md-3 mb-2 mb-md-0">
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">312</h4>
+                <small style="color: #7a3e42;">Successful Adoptions</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">1,800+</h4>
+                <small style="color: #7a3e42;">Care Sessions Given</small>
+            </div>
+            <div class="col-6 col-md-3">
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">24</h4>
+                <small style="color: #7a3e42;">Breeds Registered</small>
+            </div>
+        </div>
+    </div>
+
+    <div id="cats" style="padding: 60px 40px;">
+        <h2 class="text-center fw-bold mb-2">Explore the Shelter</h2>
+        <p class="text-center text-muted mb-4">Everything you need to care for and adopt our cats.</p>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1579962949542-91f33736528e?w=400&q=80"
+                         class="card-img-top" alt="Our Cats"
+                         style="height: 180px; object-fit: cover;" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Our Cats</h5>
+                        <p class="card-text text-muted small">Browse all cats currently living in the shelter.</p>
+                        <a asp-controller="Cats" asp-action="Index"
+                               class="btn btn-sm"
+                               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                            View Cats
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1770181180521-c1fdac4f3b33?w=400&q=80"
+                         class="card-img-top" alt="Adoptions"
+                         style="height: 180px; object-fit: cover;" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Adoptions</h5>
+                        <p class="card-text text-muted small">View records or start a new adoption application.</p>
+                        <a asp-controller="Adoptions" asp-action="Index"
+                               class="btn btn-sm"
+                               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                            View Adoptions
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1589433314716-f60dc2d9a969?w=400&q=80"
+                         class="card-img-top" alt="Cat Care"
+                         style="height: 180px; object-fit: cover;" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Cat Care</h5>
+                        <p class="card-text text-muted small">Manage care sessions and track each cat's health.</p>
+                        <a asp-controller="CatCares" asp-action="Index"
+                               class="btn btn-sm"
+                               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                            View Care
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="https://images.unsplash.com/photo-1765358247019-d271bc8a8e8b?w=400&q=80"
+                         class="card-img-top" alt="Breeds"
+                         style="height: 180px; object-fit: cover;" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Breeds</h5>
+                        <p class="card-text text-muted small">Learn about all the cat breeds we house and care for.</p>
+                        <a asp-controller="Breeds" asp-action="Index"
+                               class="btn btn-sm"
+                               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                            View Breeds
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adoptions" style="background-color: #fef6f7; padding: 60px 40px;">
+        <h2 class="text-center fw-bold mb-2">How Adoption Works</h2>
+        <p class="text-center text-muted mb-5">A simple 3-step process to find your new best friend.</p>
+
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3 fw-bold"
+                         style="width: 50px; height: 50px; background-color: #f9c6ce; color: #7a3e42;">
+                        1
+                    </div>
+                    <h5 class="fw-bold">Browse Our Cats</h5>
+                    <p class="text-muted small">
+                        Visit our cat listings to meet all available cats.
+                        Filter by breed, age, or health status to find your match.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3 fw-bold"
+                         style="width: 50px; height: 50px; background-color: #f9c6ce; color: #7a3e42;">
+                        2
+                    </div>
+                    <h5 class="fw-bold">Submit an Application</h5>
+                    <p class="text-muted small">
+                        Fill out an adoption application for the cat you would like
+                        to give a forever home to.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-4 h-100">
+                    <div class="mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3 fw-bold"
+                         style="width: 50px; height: 50px; background-color: #f9c6ce; color: #7a3e42;">
+                        3
+                    </div>
+                    <h5 class="fw-bold">Welcome Home</h5>
+                    <p class="text-muted small">
+                        Once approved, your new companion comes home.
+                        We provide full support after adoption.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a asp-controller="Adoptions" asp-action="Create"
+                   class="btn btn-lg fw-semibold px-5"
+                   style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                Start My Adoption
+            </a>
+        </div>
+    </div>
+
+    <div id="about" class="text-center py-4" style="background-color: #d4edda;">
+        <p class="mb-1 small text-muted">
+            &copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter. All rights reserved.
+        </p>
+        <p class="mb-0 small">
+            <a asp-action="About" class="text-decoration-none me-3" style="color: #4a7c59;">About Us</a>
+            <a asp-controller="Cats" asp-action="Index" class="text-decoration-none me-3" style="color: #4a7c59;">Our Cats</a>
+            <a asp-controller="Adoptions" asp-action="Index" class="text-decoration-none" style="color: #4a7c59;">Adoptions</a>
+        </p>
+    </div>
+
 </div>

@@ -1,53 +1,134 @@
 ﻿@model IEnumerable<CatShelter.Models.Adoption>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Adoptions";
 }
 
-<h1>Index</h1>
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AdoptionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cat.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AdoptionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .page-wrapper {
+        max-width: 1000px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="d-flex justify-content-between align-items-center px-4 py-4"
+         style="background-color: #f9c6ce;">
+        <div>
+            <h3 class="fw-bold mb-0" style="color: #7a3e42;">Adoptions</h3>
+            <p class="mb-0 small" style="color: #7a3e42;">All recorded adoption applications</p>
+        </div>
+        <a asp-action="Create" class="btn fw-semibold"
+               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+            + New Adoption
+        </a>
+    </div>
+
+    <div class="p-4">
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <h5 class="text-muted">No adoptions recorded yet.</h5>
+                <a asp-action="Create" class="btn mt-3 fw-semibold"
+                       style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                    Record First Adoption
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr style="background-color: #d4edda;">
+                            <th style="color: #2e5e3e;">Cat</th>
+                            <th style="color: #2e5e3e;">Adopter</th>
+                            <th style="color: #2e5e3e;">Adoption Date</th>
+                            <th style="color: #2e5e3e;">Status</th>
+                            <th class="text-end" style="color: #2e5e3e;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(item.Cat?.Img))
+                                        {
+                                            <img src="@item.Cat.Img" alt="@item.Cat.Name"
+                                                 class="rounded-circle"
+                                                 style="width:36px; height:36px; object-fit:cover;" />
+                                        }
+                                        <span class="fw-semibold">@(item.Cat?.Name ?? "Unknown")</span>
+                                    </div>
+                                </td>
+                                <td>@(item.User?.UserName ?? item.User?.Email ?? "Unknown")</td>
+                                <td>@item.AdoptionDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @switch (item.Status.ToString())
+                                    {
+                                        case "Approved":
+                                            <span class="badge"
+                                                  style="background-color: #d4edda; color: #2e5e3e;">
+                                                Approved
+                                            </span>
+                                            break;
+                                        case "Pending":
+                                            <span class="badge"
+                                                  style="background-color: #fff3cd; color: #856404;">
+                                                Pending
+                                            </span>
+                                            break;
+                                        case "Rejected":
+                                            <span class="badge"
+                                                  style="background-color: #f8d7da; color: #842029;">
+                                                Rejected
+                                            </span>
+                                            break;
+                                        default:
+                                            <span class="badge bg-secondary">@item.Status</span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Details" asp-route-id="@item.Id"
+                                           class="btn btn-sm"
+                                           style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                                        Details
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                           class="btn btn-sm"
+                                           style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                                        Edit
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-danger">
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
+</div>

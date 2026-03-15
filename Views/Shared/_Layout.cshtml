@@ -11,38 +11,61 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CatShelter</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg" style="background-color: #2e5e3e;">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index"
+                   style="color: #f9c6ce;">Paws & Hearts</a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+                <div class="collapse navbar-collapse" id="topNav">
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link" style="color: #d4edda;">Hello, @User.Identity.Name!</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm"
+                                            style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a asp-area="Identity" asp-page="/Account/Register"
+                                       class="btn btn-sm"
+                                       style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                                    Register
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-area="Identity" asp-page="/Account/Login"
+                                       class="btn btn-sm fw-semibold"
+                                       style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                                    Login
+                                </a>
+                            </li>
+                        }
+
                     </ul>
-                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - CatShelter - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

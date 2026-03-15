@@ -48,7 +48,7 @@ namespace CatShelter.Controllers
         // GET: Cats/Create
         public IActionResult Create()
         {
-            ViewData["BreedId"] = new SelectList(_context.Breed, "Id", "Id");
+            ViewBag.Breeds = _context.Breed.ToList();
             return View();
         }
 
@@ -82,7 +82,7 @@ namespace CatShelter.Controllers
             {
                 return NotFound();
             }
-            ViewData["BreedId"] = new SelectList(_context.Breed, "Id", "Id", cat.BreedId);
+            ViewBag.Breeds = _context.Breed.ToList();
             return View(cat);
         }
 

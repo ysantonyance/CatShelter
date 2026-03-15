@@ -1,33 +1,64 @@
 ﻿@model CatShelter.Models.Breed
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete " + Model.Name;
 }
 
-<h1>Delete</h1>
+<style>
+    body { background-color: #f0f0f0; }
+    .page-wrapper {
+        max-width: 620px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Breed</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+<div class="page-wrapper">
+
+    <div class="text-center py-4 px-3" style="background-color: #f8d7da;">
+        <h3 class="fw-bold mb-0" style="color: #842029;">Delete Breed</h3>
+        <p class="mb-0 small" style="color: #842029;">This action cannot be undone</p>
+    </div>
+
+    <div class="p-4 p-md-5 text-center">
+
+        <h4 class="fw-bold mb-2" style="color: #7a3e42;">@Model.Name</h4>
+        <p class="text-muted">
+            @(string.IsNullOrWhiteSpace(Model.Description) ? "No description provided." : Model.Description)
+        </p>
+
+        @if (Model.Cats != null && Model.Cats.Any())
+        {
+            <div class="alert alert-warning small text-start">
+                <strong>Warning:</strong> This breed has <strong>@Model.Cats.Count cat(s)</strong> associated.
+                Deleting it may affect those records.
+            </div>
+        }
+
+        <div class="alert small text-start" style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
+            Are you sure you want to delete <strong>@Model.Name</strong>? This <strong>cannot be undone</strong>.
+        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div class="d-flex gap-2 justify-content-center">
+                <button type="submit" class="btn fw-semibold"
+                        style="background-color: #f8d7da; color: #842029; border: none;">
+                    Yes, Delete
+                </button>
+                <a asp-action="Index" class="btn"
+                   style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
 </div>

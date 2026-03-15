@@ -1,0 +1,93 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
+
+    .page-wrapper {
+        max-width: 500px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
+        <h3 class="fw-bold mb-0" style="color: #7a3e42;">Join Our Shelter</h3>
+        <p class="mb-0 small" style="color: #7a3e42;">Create your Paws & Hearts account</p>
+    </div>
+
+    <div class="p-4 p-md-5">
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label fw-semibold">Email Address</label>
+                <input asp-for="Input.Email" class="form-control form-control-lg"
+                       autocomplete="username" placeholder="you@example.com" />
+                <span asp-validation-for="Input.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label fw-semibold">Password</label>
+                <input asp-for="Input.Password" class="form-control form-control-lg"
+                       autocomplete="new-password" placeholder="Create a strong password" />
+                <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                <div class="form-text text-muted small">
+                    Must be at least 6 characters with a number and special character.
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Input.ConfirmPassword" class="form-label fw-semibold">
+                    Confirm Password
+                </label>
+                <input asp-for="Input.ConfirmPassword" class="form-control form-control-lg"
+                       autocomplete="new-password" placeholder="Repeat your password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-lg w-100 fw-bold"
+                    style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                Create Account
+            </button>
+
+        </form>
+
+        <hr class="my-4" />
+
+        <div class="text-center">
+            <p class="text-muted small mb-2">Already have an account?</p>
+            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl"
+                   class="btn w-100"
+                   style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                Sign In Instead
+            </a>
+        </div>
+
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

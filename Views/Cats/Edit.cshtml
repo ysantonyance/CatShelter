@@ -1,64 +1,116 @@
 ﻿@model CatShelter.Models.Cat
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit " + Model.Name;
 }
 
-<h1>Edit</h1>
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
 
-<h4>Cat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Kg" class="control-label"></label>
-                <input asp-for="Kg" class="form-control" />
-                <span asp-validation-for="Kg" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Img" class="control-label"></label>
-                <input asp-for="Img" class="form-control" />
-                <span asp-validation-for="Img" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BreedId" class="control-label"></label>
-                <select asp-for="BreedId" class="form-control" asp-items="ViewBag.BreedId"></select>
-                <span asp-validation-for="BreedId" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsAdopted" /> @Html.DisplayNameFor(model => model.IsAdopted)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsHealthy" /> @Html.DisplayNameFor(model => model.IsHealthy)
-                </label>
-            </div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    .page-wrapper {
+        max-width: 650px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
+        <h3 class="fw-bold mb-0" style="color: #7a3e42;">Edit Cat — @Model.Name</h3>
+        <p class="mb-0 small" style="color: #7a3e42;">Update the details for this cat</p>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <div class="p-4 p-md-5">
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
+
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label fw-semibold"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BreedId" class="form-label fw-semibold">Breed</label>
+                <select asp-for="BreedId"
+                        asp-items="@(new SelectList(ViewBag.Breeds, "Id", "Name"))"
+                        class="form-select">
+                    <option value="">-- Select Breed --</option>
+                </select>
+                <span asp-validation-for="BreedId" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BirthDate" class="form-label fw-semibold"></label>
+                <input asp-for="BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="BirthDate" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Kg" class="form-label fw-semibold">Weight (kg)</label>
+                <input asp-for="Kg" class="form-control" type="number" step="0.1" min="0" />
+                <span asp-validation-for="Kg" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Img" class="form-label fw-semibold">Image URL</label>
+                <input asp-for="Img" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.Img))
+                {
+                    <div class="mt-2">
+                        <small class="text-muted">Current image:</small><br />
+                        <img src="@Model.Img" alt="Current" class="mt-1 rounded"
+                             style="height:100px; object-fit:cover; border: 2px solid #f9c6ce;" />
+                    </div>
+                }
+                <span asp-validation-for="Img" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4 d-flex gap-4">
+                <div class="form-check">
+                    <input asp-for="IsAdopted" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsAdopted" class="form-check-label">Adopted</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="IsHealthy" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsHealthy" class="form-check-label">Healthy</label>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn fw-semibold"
+                        style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                    Save Changes
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.Id"
+                       class="btn"
+                       style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

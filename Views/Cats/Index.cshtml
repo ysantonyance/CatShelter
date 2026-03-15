@@ -1,71 +1,144 @@
 ﻿@model IEnumerable<CatShelter.Models.Cat>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Our Cats";
 }
 
-<h1>Index</h1>
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BirthDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Kg)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Img)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Breed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAdopted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsHealthy)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirthDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Kg)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Img)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Breed.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAdopted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsHealthy)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .page-wrapper {
+        max-width: 1100px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <div class="d-flex justify-content-between align-items-center px-4 py-4"
+         style="background-color: #f9c6ce;">
+        <div>
+            <h3 class="fw-bold mb-0" style="color: #7a3e42;">Our Cats</h3>
+            <p class="mb-0 small" style="color: #7a3e42;">All cats currently in the shelter</p>
+        </div>
+        <a asp-action="Create" class="btn fw-semibold"
+               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+            + Add New Cat
+        </a>
+    </div>
+
+    <div class="p-4">
+
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <h5 class="text-muted">No cats in the shelter yet.</h5>
+                <a asp-action="Create" class="btn mt-3 fw-semibold"
+                       style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                    Add First Cat
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var item in Model)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0">
+
+                            @if (!string.IsNullOrEmpty(item.Img))
+                            {
+                                <img src="@item.Img" class="card-img-top" alt="@item.Name"
+                                     style="height:200px; object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center"
+                                     style="height:200px; background-color: #fef6f7;">
+                                    <span class="text-muted small">No image</span>
+                                </div>
+                            }
+
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@item.Name</h5>
+                                <p class="card-text text-muted mb-1 small">
+                                    <strong>Breed:</strong> @(item.Breed?.Name ?? "Unknown")
+                                </p>
+                                <p class="card-text text-muted mb-1 small">
+                                    <strong>Born:</strong> @item.BirthDate.ToString("dd MMM yyyy")
+                                </p>
+                                <p class="card-text text-muted mb-3 small">
+                                    <strong>Weight:</strong> @item.Kg kg
+                                </p>
+
+                                <div class="d-flex gap-1 flex-wrap">
+                                    @if (item.IsAdopted)
+                                    {
+                                        <span class="badge"
+                                              style="background-color: #d4edda; color: #2e5e3e;">
+                                            Adopted
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge"
+                                              style="background-color: #fff3cd; color: #856404;">
+                                            Available
+                                        </span>
+                                    }
+                                    @if (item.IsHealthy)
+                                    {
+                                        <span class="badge"
+                                              style="background-color: #f9c6ce; color: #7a3e42;">
+                                            Healthy
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge"
+                                              style="background-color: #f8d7da; color: #842029;">
+                                            Needs Care
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="card-footer d-flex gap-2"
+                                 style="background-color: #fafafa; border-top: 1px solid #eee;">
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="btn btn-sm"
+                                       style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                                    Details
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="btn btn-sm"
+                                       style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                                    Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-danger ms-auto">
+                                    Delete
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
+</div>
