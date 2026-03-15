@@ -160,5 +160,28 @@ namespace CatShelter.Controllers
         {
             return _context.Cat.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> AdoptionStatus()
+        {
+            var adoptedCatIds = await _context.Adoption
+                .Select(a => a.CatId)
+                .ToListAsync();
+
+            var adoptedCats = await _context.Cat
+                .Where(c => adoptedCatIds.Contains(c.Id))
+                .Include(c => c.Breed)
+                .ToListAsync();
+
+            var availableCats = await _context.Cat
+                .Where(c => !adoptedCatIds.Contains(c.Id))
+                .Include(c => c.Breed)
+                .ToListAsync();
+
+            ViewBag.AdoptedCats = adoptedCats;
+            ViewBag.AvailableCats = availableCats;
+
+            return View();
+        }
+
     }
 }
