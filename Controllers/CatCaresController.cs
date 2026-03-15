@@ -51,7 +51,7 @@ namespace CatShelter.Controllers
         // GET: CatCares/Create
         public IActionResult Create()
         {
-            ViewBag.Cares = _context.Care.ToList();
+            ViewBag.Cares = _context.Care.ToList(); 
             ViewBag.Cats = _context.Cat.Include(c => c.Breed).ToList();
             ViewBag.Users = _context.Users.ToList();
             return View();
@@ -62,17 +62,20 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CatId,CareId,IsSatisfied,Price,UserId,Id")] CatCare catCare)
+        public async Task<IActionResult> Create([Bind("CatId,CareId,Price,UserId,Id")] CatCare catCare)
         {
+            catCare.IsSatisfied = false;
+
             if (ModelState.IsValid)
             {
                 _context.Add(catCare);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CareId"] = new SelectList(_context.Care, "Id", "Id", catCare.CareId);
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", catCare.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", catCare.UserId);
+
+            ViewBag.Cares = _context.Care.ToList();
+            ViewBag.Cats = _context.Cat.Include(c => c.Breed).ToList();
+            ViewBag.Users = _context.Users.ToList();
             return View(catCare);
         }
 
@@ -89,9 +92,9 @@ namespace CatShelter.Controllers
             {
                 return NotFound();
             }
-            ViewData["CareId"] = new SelectList(_context.Care, "Id", "Id", catCare.CareId);
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", catCare.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", catCare.UserId);
+            ViewData["CareId"] = new SelectList(_context.Care, "Id", "CareName", catCare.CareId);
+            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", catCare.CatId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", catCare.UserId);
             return View(catCare);
         }
 
@@ -107,11 +110,27 @@ namespace CatShelter.Controllers
                 return NotFound();
             }
 
+            var catCareInDb = await _context.CatCare.FindAsync(id);
+            if (catCareInDb == null)
+                return NotFound();
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(catCare);
+                    // Update fields everyone can edit
+                    catCareInDb.CatId = catCare.CatId;
+                    catCareInDb.CareId = catCare.CareId;
+                    catCareInDb.Price = catCare.Price;
+                    catCareInDb.UserId = catCare.UserId;
+
+                    // Only admins can change the IsSatisfied flag
+                    if (User.IsInRole("Admin"))
+                    {
+                        catCareInDb.IsSatisfied = catCare.IsSatisfied;
+                    }
+
+                    _context.Update(catCareInDb);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -127,9 +146,10 @@ namespace CatShelter.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CareId"] = new SelectList(_context.Care, "Id", "Id", catCare.CareId);
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", catCare.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", catCare.UserId);
+
+            ViewData["CareId"] = new SelectList(_context.Care, "Id", "CareName", catCare.CareId);
+            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", catCare.CatId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", catCare.UserId);
             return View(catCare);
         }
 

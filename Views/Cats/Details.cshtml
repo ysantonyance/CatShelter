@@ -45,11 +45,22 @@
             <dt class="col-sm-4 text-muted">Breed</dt>
             <dd class="col-sm-8">@(Model.Breed?.Name ?? "Unknown")</dd>
 
-            <dt class="col-sm-4 text-muted">Birth Date</dt>
-            <dd class="col-sm-8">@Model.BirthDate.ToString("dd MMMM yyyy")</dd>
+            @{
+                var birth = Model.BirthDate; 
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var age = today.Year - birth.Year;
+                if (birth > today.AddYears(-age)) { age--; }
+            }
+            <span>Age: @age years</span>
 
             <dt class="col-sm-4 text-muted">Weight</dt>
             <dd class="col-sm-8">@Model.Kg kg</dd>
+
+            <dt class="col-sm-4 text-muted">Gender</dt>
+            <dd class="col-sm-8">@Model.Gender</dd>
+
+            <dt class="col-sm-4 text-muted">Notes</dt>
+            <dd class="col-sm-8">@(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : "No info")</dd>
 
             <dt class="col-sm-4 text-muted">Adoption Status</dt>
             <dd class="col-sm-8">

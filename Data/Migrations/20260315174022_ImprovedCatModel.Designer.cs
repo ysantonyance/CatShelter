@@ -4,6 +4,7 @@ using CatShelter.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatShelter.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260315174022_ImprovedCatModel")]
+    partial class ImprovedCatModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,32 +160,6 @@ namespace CatShelter.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Care");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CareName = "Food",
-                            Description = "Cats will get food and water"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CareName = "Medical Exam",
-                            Description = "Each cat will have an opportunity to be medically examined"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CareName = "Playtime",
-                            Description = "You can come to our shelter to cheer the cats with play time"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CareName = "Special Treatment",
-                            Description = "Disabled or sick cats could get treatment based on their health problem"
-                        });
                 });
 
             modelBuilder.Entity("CatShelter.Models.Cat", b =>

@@ -11,6 +11,8 @@ namespace CatShelter.Models
         public virtual Breed? Breed { get; set; }
         public bool IsAdopted { get; set; }
         public bool IsHealthy { get; set; }
+        public Gender Gender { get; set; }
+        public string Description { get; set; }
         public ICollection<CatCare> CatCares { get; set; } = new List<CatCare>();
         public ICollection<Adoption> Adoptions { get; set; } = new List<Adoption>();
     }

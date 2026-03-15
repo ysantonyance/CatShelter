@@ -1,4 +1,6 @@
-﻿namespace CatShelter.Models
+﻿using System.ComponentModel;
+
+namespace CatShelter.Models
 {
     public class Care : BaseEntity
     {

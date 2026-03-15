@@ -75,8 +75,23 @@
                                 <p class="card-text text-muted mb-1 small">
                                     <strong>Born:</strong> @item.BirthDate.ToString("dd MMM yyyy")
                                 </p>
-                                <p class="card-text text-muted mb-3 small">
+
+                                @{
+                                    var birth = item.BirthDate; 
+                                    var today = DateOnly.FromDateTime(DateTime.Today);
+                                    var age = today.Year - birth.Year;
+                                    if (birth > today.AddYears(-age)) { age--; }
+                                }
+                                <span>Age: @age years</span>
+
+                                <p class="card-text text-muted mb-1 small">
                                     <strong>Weight:</strong> @item.Kg kg
+                                </p>
+                                <p class="card-text text-muted mb-1 small">
+                                    <strong>Gender:</strong> @item.Gender
+                                </p>
+                                <p class="card-text text-muted mb-1 small">
+                                    <strong>Notes:</strong> @(string.IsNullOrWhiteSpace(item.Description) ? "No info" : item.Description)
                                 </p>
 
                                 <div class="d-flex gap-1 flex-wrap">

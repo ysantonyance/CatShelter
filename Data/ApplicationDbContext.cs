@@ -52,6 +52,12 @@ namespace CatShelter.Data
                 .HasForeignKey(async => async.CatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Care>().HasData(
+                new Care { Id = 1, CareName = "Food", Description = "Cats will get food and water" },
+                new Care { Id = 2, CareName = "Medical Exam", Description = "Each cat will have an opportunity to be medically examined" },
+                new Care { Id = 3, CareName = "Playtime", Description = "You can come to our shelter to cheer the cats with play time" },
+                new Care { Id = 4, CareName = "Special Treatment", Description = "Disabled or sick cats could get treatment based on their health problem" }
+            );
         }
         public DbSet<CatShelter.Models.Cat> Cat { get; set; } = default!;
         public DbSet<CatShelter.Models.Breed> Breed { get; set; } = default!;
