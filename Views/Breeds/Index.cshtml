@@ -33,20 +33,26 @@
             <span class="text-muted">
                 @Model.Count() breed(s) registered
             </span>
-            <a asp-action="Create" class="btn fw-semibold"
-                   style="background-color: #d4edda; color: #155724; border: 1px solid #b8dfc4;">
-                + Add New Breed
-            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Create" class="btn fw-semibold"
+                       style="background-color: #d4edda; color: #155724; border: 1px solid #b8dfc4;">
+                    + Add New Breed
+                </a>
+            }
         </div>
 
         @if (!Model.Any())
         {
             <div class="text-center py-5">
                 <h4 class="text-muted">No breeds registered yet.</h4>
-                <a asp-action="Create" class="btn fw-semibold mt-2"
-                       style="background-color: #d4edda; color: #155724; border: 1px solid #b8dfc4;">
-                    Add First Breed
-                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Create" class="btn fw-semibold mt-2"
+                           style="background-color: #d4edda; color: #155724; border: 1px solid #b8dfc4;">
+                        Add First Breed
+                    </a>
+                }
             </div>
         }
         else
@@ -84,16 +90,21 @@
                                        style="background-color: #f9c6ce; color: #a0003a; border: 1px solid #f5a8b5;">
                                     Details
                                 </a>
-                                <a asp-action="Edit" asp-route-id="@item.Id"
-                                       class="btn btn-sm fw-semibold"
-                                       style="background-color: #fff3cd; color: #856404; border: 1px solid #ffe69c;">
-                                    Edit
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id"
-                                       class="btn btn-sm fw-semibold ms-auto"
-                                       style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
-                                    Delete
-                                </a>
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.Id"
+                                           class="btn btn-sm fw-semibold"
+                                           style="background-color: #fff3cd; color: #856404; border: 1px solid #ffe69c;">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete" asp-route-id="@item.Id"
+                                           class="btn btn-sm fw-semibold ms-auto"
+                                           style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
+                                        Delete
+                                    </a>
+                                }
                             </div>
 
                         </div>

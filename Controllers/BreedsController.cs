@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CatShelter.Data;
 using CatShelter.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CatShelter.Controllers
 {
+    
     public class BreedsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -44,6 +46,7 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +57,7 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Name,Description,Id")] Breed breed)
         {
             if (ModelState.IsValid)
@@ -66,6 +70,7 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +91,7 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Id")] Breed breed)
         {
             if (id != breed.Id)
@@ -117,6 +123,7 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +144,7 @@ namespace CatShelter.Controllers
         // POST: Breeds/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var breed = await _context.Breed.FindAsync(id);

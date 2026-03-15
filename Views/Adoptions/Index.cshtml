@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<CatShelter.Models.Adoption>
+@using CatShelter.Models
 
 @{
     ViewData["Title"] = "Adoptions";
@@ -103,20 +104,45 @@
                                     }
                                 </td>
                                 <td class="text-end">
+
+                                    @if (User.IsInRole("Admin") && item.Status == ApplicationStatus.Pending)
+                                    {
+                                        <form asp-action="Approve" method="post" style="display:inline">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button class="btn btn-sm"
+                                                    style="background-color:#d4edda;color:#2e5e3e;border:none;">
+                                                Approve
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="Reject" method="post" style="display:inline">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button class="btn btn-sm btn-danger">
+                                                Deny
+                                            </button>
+                                        </form>
+                                    }
+
                                     <a asp-action="Details" asp-route-id="@item.Id"
                                            class="btn btn-sm"
                                            style="background-color: #d4edda; color: #2e5e3e; border: none;">
                                         Details
                                     </a>
+
                                     <a asp-action="Edit" asp-route-id="@item.Id"
                                            class="btn btn-sm"
                                            style="background-color: #f9c6ce; color: #7a3e42; border: none;">
                                         Edit
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id"
-                                           class="btn btn-sm btn-danger">
-                                        Delete
-                                    </a>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-danger">
+                                            Delete
+                                        </a>
+                                    }
+
                                 </td>
                             </tr>
                         }

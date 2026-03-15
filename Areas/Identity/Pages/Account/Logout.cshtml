@@ -1,0 +1,65 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Log out";
+}
+
+<style>
+    body { background-color: #f0f0f0; }
+    .page-wrapper {
+        max-width: 620px;
+        margin: 40px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+
+    <!-- HEADER -->
+    <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
+        <h3 class="fw-bold mb-0" style="color: #7a3e42;">Log Out</h3>
+        <p class="mb-0 small" style="color: #7a3e42;">We hope to see you again soon!</p>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="p-4 p-md-5 text-center">
+
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <p class="text-muted mb-4">Are you sure you want to log out of Paws &amp; Hearts?</p>
+
+            <form asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <div class="d-flex gap-2 justify-content-center">
+                    <button type="submit" class="btn fw-semibold px-4"
+                            style="background-color: #f8d7da; color: #842029; border: none;">
+                        Yes, Log Me Out
+                    </button>
+                    <a href="/" class="btn fw-semibold px-4"
+                       style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        }
+        else
+        {
+            <p class="text-muted mb-4">You have successfully logged out of the application.</p>
+            <a href="/" class="btn fw-semibold px-4"
+               style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                Back to Home
+            </a>
+        }
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+
+</div>

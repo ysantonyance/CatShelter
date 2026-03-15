@@ -1,29 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CatShelter.Data;
+using CatShelter.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CatShelter.Data;
-using CatShelter.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CatShelter.Controllers
 {
     public class AdoptionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AdoptionsController(ApplicationDbContext context)
+        public AdoptionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Adoptions
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Adoption.Include(a => a.Cat).Include(a => a.User);
-            return View(await applicationDbContext.ToListAsync());
+            if (User.IsInRole("Admin"))
+            {
+                return View(await _context.Adoption.Include(a => a.Cat).Include(a => a.User).ToListAsync());
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var userAdoptions = await _context.Adoption
+                .Where(a => a.UserId == userId)
+                .Include(a => a.Cat)
+                .ToListAsync();
+
+            return View(userAdoptions);
         }
 
         // GET: Adoptions/Details/5
@@ -49,8 +64,12 @@ namespace CatShelter.Controllers
         // GET: Adoptions/Create
         public IActionResult Create()
         {
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["CatId"] = new SelectList(
+                _context.Cat.Where(c => !c.IsAdopted),
+                "Id",
+                "Name"
+            );
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
@@ -59,16 +78,17 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,CatId,AdoptionDate,Status,Id")] Adoption adoption)
+        public async Task<IActionResult> Create([Bind("CatId,AdoptionDate")] Adoption adoption)
         {
             if (ModelState.IsValid)
             {
+                adoption.Status = ApplicationStatus.Pending;
                 _context.Add(adoption);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", adoption.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", adoption.UserId);
+            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", adoption.CatId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", adoption.UserId);
             return View(adoption);
         }
 
@@ -85,8 +105,8 @@ namespace CatShelter.Controllers
             {
                 return NotFound();
             }
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", adoption.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", adoption.UserId);
+            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", adoption.CatId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", adoption.UserId);
             return View(adoption);
         }
 
@@ -97,6 +117,12 @@ namespace CatShelter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,CatId,AdoptionDate,Status,Id")] Adoption adoption)
         {
+            if (adoption.Status == ApplicationStatus.Approved)
+            {
+                var cat = await _context.Cat.FindAsync(adoption.CatId);
+                cat.IsAdopted = true;
+            }
+
             if (id != adoption.Id)
             {
                 return NotFound();
@@ -122,12 +148,13 @@ namespace CatShelter.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Id", adoption.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", adoption.UserId);
+            ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", adoption.CatId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", adoption.UserId);
             return View(adoption);
         }
 
         // GET: Adoptions/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,6 +175,7 @@ namespace CatShelter.Controllers
         }
 
         // POST: Adoptions/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -165,6 +193,37 @@ namespace CatShelter.Controllers
         private bool AdoptionExists(int id)
         {
             return _context.Adoption.Any(e => e.Id == id);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var adoption = await _context.Adoption.FindAsync(id);
+
+            if (adoption == null) return NotFound();
+
+            adoption.Status = ApplicationStatus.Approved;
+
+            var cat = await _context.Cat.FindAsync(adoption.CatId);
+            cat.IsAdopted = true;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            var adoption = await _context.Adoption.FindAsync(id);
+
+            if (adoption == null) return NotFound();
+
+            adoption.Status = ApplicationStatus.Denied;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

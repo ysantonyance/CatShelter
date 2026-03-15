@@ -1,4 +1,6 @@
-﻿namespace CatShelter.Models
+﻿using System.ComponentModel;
+
+namespace CatShelter.Models
 {
     public class CatCare : BaseEntity
     {
@@ -7,7 +9,8 @@
         public int CareId { get; set; }
         public virtual Care? Care { get; set; }
         public bool IsSatisfied {  get; set; }
-        public decimal Price { get; set; } = 0;
+        [DefaultValue(0)]
+        public decimal Price { get; set; } 
         public string UserId { get; set; }
         public virtual ApplicationUser? User { get; set; }
     }

@@ -84,19 +84,37 @@
             <strong>cannot be undone</strong>.
         </div>
 
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div class="d-flex gap-2 justify-content-center mt-3">
-                <button type="submit" class="btn px-4 fw-semibold"
-                        style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
-                    Yes, Delete
-                </button>
-                <a asp-action="Index" class="btn px-4"
+        @if (Model.Status == CatShelter.Models.ApplicationStatus.Approved)
+        {
+            <div class="alert alert-warning">
+                Approved adoptions cannot be deleted.
+            </div>
+
+            <div class="text-center mt-3">
+                <a asp-action="Index" class="btn"
                        style="background-color: #d4edda; color: #2e5e3e; border: none;">
-                    Cancel
+                    Back
                 </a>
             </div>
-        </form>
+        }
+        else
+        {
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="d-flex gap-2 justify-content-center mt-3">
+                    <button type="submit" class="btn px-4 fw-semibold"
+                            style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
+                        Yes, Delete
+                    </button>
+
+                    <a asp-action="Index" class="btn px-4"
+                           style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        }
 
     </div>
 
