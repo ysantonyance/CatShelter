@@ -41,6 +41,7 @@ namespace CatShelter
                 var services = scope.ServiceProvider;
                 var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
                 string[] roles = { "Admin", "User" };
                 foreach (var role in roles)
@@ -60,6 +61,34 @@ namespace CatShelter
                     if (result.Succeeded)
                         await userManager.AddToRoleAsync(adminUser, "Admin");
                 }
+
+                Console.WriteLine("Run console? (y/n)");
+                if (Console.ReadLine() == "y")
+                {
+                    Console.Write("Email: ");
+                    string email = Console.ReadLine();
+                    Console.Write("Password: ");
+                    string password = Console.ReadLine();
+
+                    var user = await userManager.FindByEmailAsync(email);
+
+                    if (user == null || !await userManager.CheckPasswordAsync(user, password))
+                    {
+                        Console.WriteLine("Invalid credentials. Launching as guest...");
+                        Console.ReadKey();
+                        var consoleMenu = new ConsoleMenu(context, false);
+                        consoleMenu.Start();
+                    }
+                    else
+                    {
+                        bool isAdmin = await userManager.IsInRoleAsync(user, "Admin");
+                        Console.WriteLine($"Welcome {user.Email}! Role: {(isAdmin ? "Admin" : "User")}");
+                        Console.ReadKey();
+                        var consoleMenu = new ConsoleMenu(context, isAdmin);
+                        consoleMenu.Start();
+                    }
+                }
+
             }
 
             // Configure the HTTP request pipeline.

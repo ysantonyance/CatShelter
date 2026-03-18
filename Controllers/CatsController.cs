@@ -57,7 +57,7 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy,Id")] Cat cat)
+        public async Task<IActionResult> Create([Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy,Description, Id")] Cat cat)
         {
             if (ModelState.IsValid)
             {
@@ -65,9 +65,10 @@ namespace CatShelter.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BreedId"] = new SelectList(_context.Breed, "Id", "Id", cat.BreedId);
+            ViewBag.Breeds = _context.Breed.ToList(); 
             return View(cat);
         }
+
 
         // GET: Cats/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -91,7 +92,7 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy,Id")] Cat cat)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy, Description Id")] Cat cat)
         {
             if (id != cat.Id)
             {

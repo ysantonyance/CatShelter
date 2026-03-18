@@ -77,12 +77,29 @@
                                 </p>
 
                                 @{
-                                    var birth = item.BirthDate; 
+                                    var birth = item.BirthDate;
                                     var today = DateOnly.FromDateTime(DateTime.Today);
-                                    var age = today.Year - birth.Year;
-                                    if (birth > today.AddYears(-age)) { age--; }
+                                    var totalDays = today.DayNumber - birth.DayNumber;
+                                    var totalWeeks = totalDays / 7;
+                                    var totalMonths = (today.Year - birth.Year) * 12 + today.Month - birth.Month;
+                                    var totalYears = today.Year - birth.Year;
+                                    if (birth > today.AddYears(-totalYears)) { totalYears--; }
+
+                                    string ageDisplay;
+                                    if (totalDays < 7)
+                                        ageDisplay = $"{totalDays} day{(totalDays == 1 ? "" : "s")}";
+                                    else if (totalDays < 30)
+                                        ageDisplay = $"{totalWeeks} week{(totalWeeks == 1 ? "" : "s")}";
+                                    else if (totalMonths < 12)
+                                        ageDisplay = $"{totalMonths} month{(totalMonths == 1 ? "" : "s")}";
+                                    else
+                                        ageDisplay = $"{totalYears} year{(totalYears == 1 ? "" : "s")}";
                                 }
-                                <span>Age: @age years</span>
+                                <p class="card-text text-muted mb-1 small">
+                                    <strong>Age:</strong> @ageDisplay
+                                </p>
+
+
 
                                 <p class="card-text text-muted mb-1 small">
                                     <strong>Weight:</strong> @item.Kg kg

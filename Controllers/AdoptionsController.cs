@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CatShelter.Controllers
@@ -80,17 +81,20 @@ namespace CatShelter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CatId,AdoptionDate")] Adoption adoption)
         {
+            adoption.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ModelState.Remove("UserId");
+            adoption.Status = ApplicationStatus.Pending;
+
             if (ModelState.IsValid)
             {
-                adoption.Status = ApplicationStatus.Pending;
                 _context.Add(adoption);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CatId"] = new SelectList(_context.Cat, "Id", "Name", adoption.CatId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", adoption.UserId);
             return View(adoption);
         }
+
 
         // GET: Adoptions/Edit/5
         public async Task<IActionResult> Edit(int? id)

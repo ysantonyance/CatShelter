@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CatShelter.Data;
+using CatShelter.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using CatShelter.Data;
-using CatShelter.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CatShelter.Controllers
 {
@@ -62,9 +63,21 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CatId,CareId,Price,UserId,Id")] CatCare catCare)
+        public async Task<IActionResult> Create([Bind("CatId,CareId,Price,Id")] CatCare catCare)
         {
+            catCare.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             catCare.IsSatisfied = false;
+            ModelState.Remove("UserId");
+            ModelState.Remove("IsSatisfied");
+
+            // DEBUG - remove after fixing
+            foreach (var key in ModelState.Keys)
+            {
+                foreach (var error in ModelState[key].Errors)
+                {
+                    Console.WriteLine($"Field: {key}, Error: {error.ErrorMessage}");
+                }
+            }
 
             if (ModelState.IsValid)
             {
@@ -75,9 +88,10 @@ namespace CatShelter.Controllers
 
             ViewBag.Cares = _context.Care.ToList();
             ViewBag.Cats = _context.Cat.Include(c => c.Breed).ToList();
-            ViewBag.Users = _context.Users.ToList();
             return View(catCare);
         }
+
+
 
         // GET: CatCares/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -118,13 +132,11 @@ namespace CatShelter.Controllers
             {
                 try
                 {
-                    // Update fields everyone can edit
                     catCareInDb.CatId = catCare.CatId;
                     catCareInDb.CareId = catCare.CareId;
                     catCareInDb.Price = catCare.Price;
                     catCareInDb.UserId = catCare.UserId;
 
-                    // Only admins can change the IsSatisfied flag
                     if (User.IsInRole("Admin"))
                     {
                         catCareInDb.IsSatisfied = catCare.IsSatisfied;

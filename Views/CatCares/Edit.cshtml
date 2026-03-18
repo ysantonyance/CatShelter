@@ -36,7 +36,7 @@
 
             <div class="mb-3">
                 <label asp-for="CatId" class="form-label fw-semibold">Cat</label>
-                <select asp-for="CatId" class="form-select" asp-items="ViewBag.CatId">
+                <select asp-for="CatId" class="form-select" asp-items="@(ViewData["CatId"] as SelectList)">
                     <option value="">-- Select Cat --</option>
                 </select>
                 <span asp-validation-for="CatId" class="text-danger small"></span>
@@ -44,19 +44,15 @@
 
             <div class="mb-3">
                 <label asp-for="CareId" class="form-label fw-semibold">Care Type</label>
-                <select asp-for="CareId" class="form-select">
+                <select asp-for="CareId" class="form-select" asp-items="@(ViewData["CareId"] as SelectList)">
                     <option value="">-- Select Care Type --</option>
-                    @foreach (var care in ViewBag.Cares)
-                    {
-                        <option value="@care.Id">@care.CareName</option>
-                    }
                 </select>
                 <span asp-validation-for="CareId" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="UserId" class="form-label fw-semibold">Assigned Staff</label>
-                <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
+                <select asp-for="UserId" class="form-select" asp-items="@(ViewData["UserId"] as SelectList)">
                     <option value="">-- Select Staff Member --</option>
                 </select>
                 <span asp-validation-for="UserId" class="text-danger small"></span>
