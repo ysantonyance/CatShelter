@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CatShelter.Controllers
 {
-    
     public class BreedsController : Controller
     {
         private readonly ApplicationDbContext _context;

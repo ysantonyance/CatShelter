@@ -124,7 +124,7 @@ namespace CatShelter.Controllers
             if (adoption.Status == ApplicationStatus.Approved)
             {
                 var cat = await _context.Cat.FindAsync(adoption.CatId);
-                cat.IsAdopted = true;
+                cat.IsAdopted = true; 
             }
 
             if (id != adoption.Id)
