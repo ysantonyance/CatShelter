@@ -15,18 +15,22 @@ namespace CatShelter.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // конструктор на контролера с инжектиран контекст на базата
         public BreedsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Breeds
+        // извежда списък с всички породи
         public async Task<IActionResult> Index()
         {
             return View(await _context.Breed.ToListAsync());
         }
 
         // GET: Breeds/Details/5
+        // извежда детайли за конкретна порода по id
+        // ако породата не съществува връща NotFound
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,6 +49,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Create
+        // показва форма за създаване на нова порода
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -52,6 +58,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Breeds/Create
+        // обработва post заявка за създаване на порода
+        // добавя породата ако моделът е валиден
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -69,6 +77,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Edit/5
+        // показва форма за редакция на съществуваща порода
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -86,6 +96,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Breeds/Edit/5
+        // обработва post заявка за редакция на порода
+        // обновява данните ако моделът е валиден
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,6 +134,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Breeds/Delete/5
+        // показва потвърждение за изтриване на порода
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -141,6 +155,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Breeds/Delete/5
+        // обработва POST заявка за изтриване на порода
+        // премахва породата от базата ако съществува
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -156,6 +172,7 @@ namespace CatShelter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // проверява дали дадена порода съществува по id
         private bool BreedExists(int id)
         {
             return _context.Breed.Any(e => e.Id == id);

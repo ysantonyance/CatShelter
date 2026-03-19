@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace CatShelterTest.Models
 {
+    // тестове за модела adoption
     public class AdoptionTest
     {
+        // създаване на валиден обект adoption за тестове
         private Adoption GetValidAdoption()
         {
             return new Adoption
@@ -19,7 +21,7 @@ namespace CatShelterTest.Models
                 Status = ApplicationStatus.Pending
             };
         }
-
+        // валиден модел трябва да мине валидация
         [Test]
         public void Adoption_ShouldPass_WhenAllFieldsProvided()
         {
@@ -32,7 +34,7 @@ namespace CatShelterTest.Models
             Assert.IsTrue(isValid);
             Assert.IsEmpty(results);
         }
-
+        // липсващ userid трябва да върне грешка
         [Test]
         public void Adoption_ShouldFail_WhenUserIdMissing()
         {
@@ -46,7 +48,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // catid = 0 трябва да върне грешка
         [Test]
         public void Adoption_ShouldFail_WhenCatIdIsZero()
         {
@@ -60,7 +62,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // празна дата трябва да върне грешка
         [Test]
         public void Adoption_ShouldFail_WhenAdoptionDateDefault()
         {
@@ -74,7 +76,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // няколко липсващи полета трябва да върнат повече грешки
         [Test]
         public void Adoption_ShouldFail_WhenMultipleFieldsMissing()
         {

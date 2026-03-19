@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace CatShelterTest.Models
 {
+    // тестове за модела breed
     public class BreedTest
     {
+        // липсващо име трябва да върне грешка
         [Test]
         public void Breed_ShouldFail_WhenNameMissing()
         {
@@ -26,7 +28,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage.Contains("Name")));
         }
-
+        // липсващо описание трябва да върне грешка
         [Test]
         public void Breed_ShouldFail_WhenDescriptionMissing()
         {
@@ -44,7 +46,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.That(results, Has.Exactly(1).Matches<ValidationResult>(r => r.ErrorMessage.Contains("Description")));
         }
-
+        // валиден модел трябва да мине валидация
         [Test]
         public void Breed_ShouldPass_WhenValid()
         {

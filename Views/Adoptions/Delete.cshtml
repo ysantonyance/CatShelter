@@ -4,6 +4,7 @@
     ViewData["Title"] = "Delete Adoption";
 }
 
+// стилове за страницата
 <style>
     body {
         background-color: #f0f0f0;
@@ -22,6 +23,7 @@
 
 <div class="page-wrapper">
 
+    // заглавна част на страницата
     <div class="text-center py-4 px-3" style="background-color: #f8d7da;">
         <h3 class="fw-bold mb-0" style="color: #842029;">Delete Adoption</h3>
         <p class="mb-0 small" style="color: #842029;">This action cannot be undone</p>
@@ -29,6 +31,7 @@
 
     <div class="p-4 p-md-5">
 
+        // показване на информация за котката и осиновителя
         <div class="d-flex align-items-center gap-3 p-3 rounded mb-4"
              style="background-color: #fef6f7; border: 1px solid #f9c6ce;">
             @if (!string.IsNullOrEmpty(Model.Cat?.Img))
@@ -45,6 +48,7 @@
             </div>
         </div>
 
+        // детайли за осиновяването
         <dl class="row mb-4">
             <dt class="col-sm-5 text-muted">Adoption Date</dt>
             <dd class="col-sm-7">@Model.AdoptionDate.ToString("dd MMMM yyyy")</dd>
@@ -78,18 +82,21 @@
             </dd>
         </dl>
 
+        // предупреждение за изтриване
         <div class="alert" role="alert"
              style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
             Are you sure you want to delete this adoption record? This action
             <strong>cannot be undone</strong>.
         </div>
 
+        // проверка дали осиновяването е одобрено
         @if (Model.Status == CatShelter.Models.ApplicationStatus.Approved)
         {
             <div class="alert alert-warning">
                 Approved adoptions cannot be deleted.
             </div>
 
+            // бутон за връщане
             <div class="text-center mt-3">
                 <a asp-action="Index" class="btn"
                        style="background-color: #d4edda; color: #2e5e3e; border: none;">
@@ -99,6 +106,7 @@
         }
         else
         {
+            // форма за изтриване на осиновяването
             <form asp-action="Delete">
                 <input type="hidden" asp-for="Id" />
 
@@ -118,6 +126,7 @@
 
     </div>
 
+    // футър с авторски права
     <div class="text-center py-3" style="background-color: #d4edda;">
         <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
     </div>

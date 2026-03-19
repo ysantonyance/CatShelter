@@ -5,44 +5,50 @@ using CatShelter;
 
 public class ConsoleMenu
 {
+    // контекст за базата данни
     private readonly ApplicationDbContext _context;
+    // дали потребителят е администратор
     private readonly bool _isAdmin;
 
+    // конструктор за инициализация на менюто
     public ConsoleMenu(ApplicationDbContext context, bool isAdmin = false)
     {
         _context = context;
         _isAdmin = isAdmin;
     }
 
+    // стартира главното меню на приложението
     public void Start()
     {
         while (true)
         {
-            Console.Clear();
-            Console.WriteLine("CAT SHELTER");
+            Console.Clear(); // изчиства конзолата
+            Console.WriteLine("CAT SHELTER"); // заглавие на приложението
 
+            // проверка дали е администратор
             if (_isAdmin)
                 Console.WriteLine("1. Admin Menu");
             else
                 Console.WriteLine("1. User Menu");
 
-            Console.WriteLine("2. Exit");
+            Console.WriteLine("2. Exit"); // опция за изход
 
-            string choice = Console.ReadLine();
+            string choice = Console.ReadLine(); // въвеждане на избор от потребителя
             if (choice == "1")
             {
                 if (_isAdmin)
-                    AdminMenu();
+                    AdminMenu(); // отваряне на админ меню
                 else
-                    UserMenu();
+                    UserMenu(); // извикване на потребителско меню
             }
             else if (choice == "2")
             {
-                return;
+                return; // изход от програмата
             }
         }
     }
 
+    // меню за обикновен потребител
     private void UserMenu()
     {
         while (true)
@@ -58,23 +64,24 @@ public class ConsoleMenu
             switch (Console.ReadLine())
             {
                 case "1": 
-                    ListCats(); 
+                    ListCats(); // меню за обикновен потребител
                     break;
                 case "2": 
-                    ViewCatDetails(); 
+                    ViewCatDetails(); // детайли за котка
                     break;
                 case "3": 
-                    CreateAdoption(); 
+                    CreateAdoption(); // създаване на заявка за осиновяване 
                     break;
                 case "4": 
-                    CreateCatCare(); 
+                    CreateCatCare(); // създаване на запис за грижа/дарение
                     break;
                 case "5": 
-                    return;
+                    return; // връщане назад
             }
         }
     }
 
+    // меню за администратор
     private void AdminMenu()
     {
         while (true)
@@ -90,23 +97,24 @@ public class ConsoleMenu
             switch (Console.ReadLine())
             {
                 case "1": 
-                    CatsMenu(); 
+                    CatsMenu(); // меню котки
                     break;
                 case "2": 
-                    BreedsMenu();
+                    BreedsMenu(); // меню породи
                     break;
                 case "3": 
-                    AdoptionsMenu(); 
+                    AdoptionsMenu(); // меню осиновявания
                     break;
                 case "4": 
-                    CatCareMenu(); 
+                    CatCareMenu(); // меню грижи
                     break;
                 case "5": 
-                    return;
+                    return; // връщане назад
             }
         }
     }
 
+    // меню за управление на котки
     private void CatsMenu()
     {
         while (true)
@@ -122,65 +130,78 @@ public class ConsoleMenu
             switch (Console.ReadLine())
             {
                 case "1": 
-                    ListCats(); 
+                    ListCats(); // извикване на метод за списък котки
                     break;
                 case "2": 
-                    CreateCat(); 
+                    CreateCat(); // извикване на метод за създаване на котка
                     break;
-                case "3": 
-                    EditCat();
+                case "3":
+                    EditCat(); // извикване на метод за редакция на котка
                     break;
                 case "4":
-                    DeleteCat(); 
+                    DeleteCat(); // извикване на метод за изтриване на котка
                     break;
                 case "5":
-                    return;
+                    return; // връщане назад
             }
         }
     }
 
+    // показване на всички котки
     private void ListCats()
     {
+        // изчиства конзолата преди да се покаже списъка
         Console.Clear();
+        // взима всички котки от базата и включва информация за породата им
         var cats = _context.Cat.Include(c => c.Breed).ToList();
+        // обхожда всяка котка и отпечатва id, име, порода и дали е осиновена
         foreach (var c in cats)
             Console.WriteLine($"#{c.Id} - {c.Name} - {c.Breed?.Name} - Adopted: {c.IsAdopted}");
+        // информира потребителя да натисне клавиш за продължаване
         Console.WriteLine("Press any key...");
+        // изчаква потребителя да натисне клавиш
         Console.ReadKey();
     }
 
+    // създаване на нова котка
     private void CreateCat()
     {
+        // изчиства конзолата преди въвеждането на данни
         Console.Clear();
+        // изчиства конзолата преди въвеждането на данни
         Console.WriteLine("CREATE NEW CAT");
 
+        // въвеждане на име на котката от потребителя
         Console.Write("Name: ");
         string name = Console.ReadLine();
-
+        // взима всички породи от базата
         var breeds = _context.Breed.ToList();
+        // показва списък с всички породи
         foreach (var b in breeds)
             Console.WriteLine($"{b.Id}: {b.Name}");
+        // въвеждане на id на порода
         Console.Write("Breed Id: ");
         int breedId = int.Parse(Console.ReadLine());
-
+        // въвеждане на тегло в килограми
         Console.Write("Weight (kg): ");
         decimal kg = decimal.Parse(Console.ReadLine());
-
+        // въвеждане на тегло в килограми
         Console.Write("Birthdate (yyyy-mm-dd): ");
         DateOnly birthDate = DateOnly.Parse(Console.ReadLine());
-
+        // въвеждане на пол (мъжки или женски)
         Console.Write("Gender (Male/Female): ");
         Gender gender = Enum.Parse<Gender>(Console.ReadLine(), true);
-
+        // въвеждане на описание
         Console.Write("Description: ");
         string description = Console.ReadLine();
-
+        // въвеждане на път до изображение
         Console.Write("Image (path): ");
         string img = Console.ReadLine();
-
+        Console.Write("Is Healthy? (y/n): ");
         Console.Write("Is Healthy? (y/n): ");
         bool isHealthy = Console.ReadLine().ToLower() == "y";
 
+        // създаване на нов обект котка с въведените данни
         var cat = new Cat
         {
             Name = name,
@@ -190,23 +211,29 @@ public class ConsoleMenu
             Gender = gender,
             Description = description,
             Img = img,
-            IsAdopted = false,
+            IsAdopted = false, // по подразбиране не е осиновена
             IsHealthy = isHealthy
         };
 
+        // добавяне на котката в базата
         _context.Cat.Add(cat);
+        // запазване на промените в базата
         _context.SaveChanges();
-
+        // запазване на промените в базата
         Console.WriteLine("Cat created successfully!");
+        // изчакване на натискане на клавиш
         Console.ReadKey();
     }
 
+    // редакция на котка
     private void EditCat()
     {
+        // въвеждане на id на котката за редакция
         Console.Write("Cat Id to edit: ");
+        // проверка дали въведеното е валидно число
         if (!int.TryParse(Console.ReadLine(), out int id))
             return;
-
+        // търсене на котката в базата по id
         var cat = _context.Cat.Find(id);
         if (cat == null)
         {
@@ -215,6 +242,7 @@ public class ConsoleMenu
             return;
         }
 
+        // цикъл за редакция на полета
         while (true)
         {
             Console.Clear();
@@ -291,49 +319,51 @@ public class ConsoleMenu
         }
     }
 
+    // изтриване на котка по id
     private void DeleteCat()
-    {
-        Console.Write("Cat Id to delete: ");
-        int id = int.Parse(Console.ReadLine());
-        var cat = _context.Cat.Find(id);
-        if (cat != null)
         {
-            _context.Cat.Remove(cat);
-            _context.SaveChanges();
-        }
-        Console.WriteLine("Deleted!");
-        Console.ReadKey();
+            Console.Write("Cat Id to delete: ");
+            int id = int.Parse(Console.ReadLine());
+            var cat = _context.Cat.Find(id);
+            if (cat != null)
+            {
+                _context.Cat.Remove(cat);
+                _context.SaveChanges();
+            }
+            Console.WriteLine("Deleted!");
+            Console.ReadKey();
     }
 
+    // показване на детайли за котка
     private void ViewCatDetails()
-    {
-        Console.Write("Cat Id: ");
-        int id = int.Parse(Console.ReadLine());
-        var cat = _context.Cat.Include(c => c.Breed).FirstOrDefault(c => c.Id == id);
-        if (cat != null)
         {
-            Console.WriteLine($"Name: {cat.Name}");
-            Console.WriteLine($"Breed: {cat.Breed?.Name}");
-            var birth = cat.BirthDate;
-            var today = DateOnly.FromDateTime(DateTime.Today);
-            var totalDays = today.DayNumber - birth.DayNumber;
-            var totalWeeks = totalDays / 7;
-            var totalMonths = (today.Year - birth.Year) * 12 + today.Month - birth.Month;
-            var totalYears = today.Year - birth.Year;
-            if (birth > today.AddYears(-totalYears)) { totalYears--; }
-            string ageDisplay = totalDays < 7 ? $"{totalDays} day{(totalDays == 1 ? "" : "s")}"
-                : totalDays < 30 ? $"{totalWeeks} week{(totalWeeks == 1 ? "" : "s")}"
-                : totalMonths < 12 ? $"{totalMonths} month{(totalMonths == 1 ? "" : "s")}"
-                : $"{totalYears} year{(totalYears == 1 ? "" : "s")}";
-            Console.WriteLine($"Age: {ageDisplay}");
-            Console.WriteLine($"Adopted: {cat.IsAdopted}");
-            Console.WriteLine($"Healthy: {cat.IsHealthy}");
-            Console.WriteLine($"Description: {cat.Description}");
+            Console.Write("Cat Id: ");
+            int id = int.Parse(Console.ReadLine());
+            var cat = _context.Cat.Include(c => c.Breed).FirstOrDefault(c => c.Id == id);
+            if (cat != null)
+            {
+                Console.WriteLine($"Name: {cat.Name}");
+                Console.WriteLine($"Breed: {cat.Breed?.Name}");
+                var birth = cat.BirthDate;
+                var today = DateOnly.FromDateTime(DateTime.Today);
+                var totalDays = today.DayNumber - birth.DayNumber;
+                var totalWeeks = totalDays / 7;
+                var totalMonths = (today.Year - birth.Year) * 12 + today.Month - birth.Month;
+                var totalYears = today.Year - birth.Year;
+                if (birth > today.AddYears(-totalYears)) { totalYears--; }
+                string ageDisplay = totalDays < 7 ? $"{totalDays} day{(totalDays == 1 ? "" : "s")}"
+                    : totalDays < 30 ? $"{totalWeeks} week{(totalWeeks == 1 ? "" : "s")}"
+                    : totalMonths < 12 ? $"{totalMonths} month{(totalMonths == 1 ? "" : "s")}"
+                    : $"{totalYears} year{(totalYears == 1 ? "" : "s")}";
+                Console.WriteLine($"Age: {ageDisplay}");
+                Console.WriteLine($"Adopted: {cat.IsAdopted}");
+                Console.WriteLine($"Healthy: {cat.IsHealthy}");
+                Console.WriteLine($"Description: {cat.Description}");
+            }
+            Console.WriteLine("Press any key...");
+            Console.ReadKey();
         }
-        Console.WriteLine("Press any key...");
-        Console.ReadKey();
-    }
-
+    // меню за управление на породи
     private void BreedsMenu()
     {
         while (true)
@@ -361,7 +391,7 @@ public class ConsoleMenu
             }
         }
     }
-
+    // показване на всички породи
     private void ListBreeds()
     {
         Console.Clear();
@@ -370,7 +400,7 @@ public class ConsoleMenu
             Console.WriteLine($"#{b.Id} - {b.Name}");
         Console.ReadKey();
     }
-
+    // създаване на нова порода
     private void CreateBreed()
     {
         Console.Write("Name: ");
@@ -382,7 +412,7 @@ public class ConsoleMenu
         Console.WriteLine("Created!");
         Console.ReadKey();
     }
-
+    // изтриване на порода по id
     private void DeleteBreed()
     {
         Console.Write("Breed Id to delete: ");
@@ -396,7 +426,7 @@ public class ConsoleMenu
         Console.WriteLine("Deleted!");
         Console.ReadKey();
     }
-
+    // меню за управление на осиновявания
     private void AdoptionsMenu()
     {
         while (true)
@@ -428,7 +458,7 @@ public class ConsoleMenu
             }
         }
     }
-
+    // показване на всички осиновявания
     private void ListAdoptions()
     {
         Console.Clear();
@@ -437,7 +467,7 @@ public class ConsoleMenu
             Console.WriteLine($"#{a.Id} - {a.Cat?.Name} - {a.Status} - User: {a.User?.Email ?? a.UserId}");
         Console.ReadKey();
     }
-
+    // създаване на нова заявка за осиновяване
     private void CreateAdoption()
     {
         Console.Clear();
@@ -473,7 +503,7 @@ public class ConsoleMenu
         Console.WriteLine("Adoption request created!");
         Console.ReadKey();
     }
-
+    // промяна на статус на осиновяване
     private void ChangeAdoptionStatus(ApplicationStatus status)
     {
         Console.Write("Adoption Id: ");
@@ -497,7 +527,7 @@ public class ConsoleMenu
         }
         Console.ReadKey();
     }
-
+    // изтриване на осиновяване по id
     private void DeleteAdoption()
     {
         Console.Write("Adoption Id: ");
@@ -511,7 +541,7 @@ public class ConsoleMenu
         Console.WriteLine("Deleted!");
         Console.ReadKey();
     }
-
+    // меню за грижи и дарения за котки
     private void CatCareMenu()
     {
         while (true)
@@ -543,7 +573,7 @@ public class ConsoleMenu
             }
         }
     }
-
+    // показване на всички записи за грижи
     private void ListCatCare()
     {
         Console.Clear();
@@ -552,7 +582,7 @@ public class ConsoleMenu
             Console.WriteLine($"#{c.Id} - {c.Cat?.Name} - {c.Care?.CareName} - {c.Price:C} - Satisfied: {c.IsSatisfied}");
         Console.ReadKey();
     }
-
+    // създаване на нов запис за грижа/дарение
     private void CreateCatCare()
     {
         Console.Clear();
@@ -592,8 +622,7 @@ public class ConsoleMenu
         Console.WriteLine("Care record created!");
         Console.ReadKey();
     }
-
-
+    // маркиране на грижа като изпълнена
     private void MarkCareSatisfied()
     {
         Console.Write("Care Id to mark as satisfied: ");
@@ -607,7 +636,7 @@ public class ConsoleMenu
         Console.WriteLine("Marked as satisfied!");
         Console.ReadKey();
     }
-
+    // изтриване на запис за грижа по id
     private void DeleteCatCare()
     {
         Console.Write("Care Id to delete: ");

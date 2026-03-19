@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace CatShelterTest.Models
 {
+    // тестове за модела cat
     public class CatTest
     {
+        // помощен клас с допълнителна валидация за дата на раждане
         private class CatWithBirthDateValidation : Cat
         {
             public IEnumerable<ValidationResult> Validate()
@@ -26,7 +28,7 @@ namespace CatShelterTest.Models
                 return results;
             }
         }
-
+        // създаване на валиден обект котка
         private CatWithBirthDateValidation GetValidCat() => new CatWithBirthDateValidation
         {
             Name = "Leo",
@@ -39,7 +41,7 @@ namespace CatShelterTest.Models
             Gender = Gender.Male,
             Description = "Cute kitten"
         };
-
+        // валиден модел трябва да мине валидация
         [Test]
         public void Cat_ShouldBeValid_WhenAllFieldsProvided()
         {
@@ -47,7 +49,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsEmpty(results); 
         }
-
+        // липсващо име трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenNameMissing()
         {
@@ -57,7 +59,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // липсваща снимка трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenImgMissing()
         {
@@ -67,7 +69,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // липсващо описание трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenDescriptionMissing()
         {
@@ -77,7 +79,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // breedid = 0 трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenBreedIdIsZero()
         {
@@ -87,7 +89,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // тегло 0 или отрицателно трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenKgIsZeroOrNegative()
         {
@@ -97,7 +99,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // бъдеща дата на раждане трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenBirthDateInFuture()
         {
@@ -107,7 +109,7 @@ namespace CatShelterTest.Models
             var results = cat.Validate();
             Assert.IsNotEmpty(results);
         }
-
+        // невалиден gender трябва да върне грешка
         [Test]
         public void Cat_ShouldFail_WhenGenderDefault()
         {

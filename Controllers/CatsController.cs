@@ -14,12 +14,14 @@ namespace CatShelter.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // конструктор на контролера с инжектиран контекст на базата
         public CatsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Cats
+        // извежда списък с всички котки включително породата им
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Cat.Include(c => c.Breed);
@@ -27,6 +29,7 @@ namespace CatShelter.Controllers
         }
 
         // GET: Cats/Details/5
+        // извежда детайли за конкретна котка по id включително породата
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +49,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Cats/Create
+        // показва форма за създаване на нова котка
+        // извлича списък с породи за селект
         public IActionResult Create()
         {
             ViewBag.Breeds = _context.Breed.ToList();
@@ -53,6 +58,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Cats/Create
+        // обработва post заявка за създаване на котка
+        // добавя котката ако моделът е валиден
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -71,6 +78,8 @@ namespace CatShelter.Controllers
 
 
         // GET: Cats/Edit/5
+        // показва форма за редакция на съществуваща котка
+        // извлича списък с породи за селект
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,6 +97,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Cats/Edit/5
+        // обработва post заявка за редакция на котка
+        // обновява данните ако моделът е валиден
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -124,6 +135,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Cats/Delete/5
+        // показва потвърждение за изтриване на котка
+        // включва информация за породата
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -143,6 +156,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Cats/Delete/5
+        // обработва post заявка за изтриване на котка
+        // премахва котката от базата
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -157,11 +172,14 @@ namespace CatShelter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // проверява дали дадена котка съществува по id
         private bool CatExists(int id)
         {
             return _context.Cat.Any(e => e.Id == id);
         }
 
+        // извежда списък с осиновени и налични котки
+        // използва информация от таблицата с осиновявания
         public async Task<IActionResult> AdoptionStatus()
         {
             var adoptedCatIds = await _context.Adoption

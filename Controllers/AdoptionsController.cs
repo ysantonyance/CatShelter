@@ -13,11 +13,15 @@ using System.Threading.Tasks;
 
 namespace CatShelter.Controllers
 {
+    // контролер за управление на процеса по осиновяване на котки
+    // позволява на потребители да създават, редактират и преглеждат заявки за осиновяване
+    // а на администратори - да одобряват или отказват заявки
     public class AdoptionsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        // конструктор на контролера, инжектира база данни и UserManager за управление на потребители
         public AdoptionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -25,6 +29,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Adoptions
+        // извежда списък със заявки за осиновяване.
+        // администраторите виждат всички заявки, обикновените потребители – само своите
         public async Task<IActionResult> Index()
         {
             if (User.IsInRole("Admin"))
@@ -43,6 +49,7 @@ namespace CatShelter.Controllers
         }
 
         // GET: Adoptions/Details/5
+        // извежда детайли за конкретна заявка за осиновяване
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -63,24 +70,29 @@ namespace CatShelter.Controllers
         }
 
         // GET: Adoptions/Create
+        // подготвя формата за създаване на нова заявка за осиновяване
         public IActionResult Create()
         {
+            // списък с налични за осиновяване котки
             ViewData["CatId"] = new SelectList(
                 _context.Cat.Where(c => !c.IsAdopted),
                 "Id",
                 "Name"
             );
+            // списък с потребители (за администратори)
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
         // POST: Adoptions/Create
+        // създава нова заявка за осиновяване, като задава текущия потребител и статус Pending
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CatId,AdoptionDate")] Adoption adoption)
         {
+            // автоматично задаване на текущия потребител като собственик на заявката
             adoption.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ModelState.Remove("UserId");
             adoption.Status = ApplicationStatus.Pending;
@@ -97,6 +109,7 @@ namespace CatShelter.Controllers
 
 
         // GET: Adoptions/Edit/5
+        // подготвя формата за редакция на съществуваща заявка
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,6 +128,7 @@ namespace CatShelter.Controllers
         }
 
         // POST: Adoptions/Edit/5
+        // обновява съществуваща заявка и променя статуса на котката, ако заявката е одобрена
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -124,7 +138,7 @@ namespace CatShelter.Controllers
             if (adoption.Status == ApplicationStatus.Approved)
             {
                 var cat = await _context.Cat.FindAsync(adoption.CatId);
-                cat.IsAdopted = true; 
+                cat.IsAdopted = true; // обновяване на състоянието на котката
             }
 
             if (id != adoption.Id)
@@ -158,6 +172,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: Adoptions/Delete/5
+        // извежда потвърждение за изтриване на заявка
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -179,6 +195,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: Adoptions/Delete/5
+        // изтрива заявка за осиновяване от базата
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -194,11 +212,14 @@ namespace CatShelter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // проверява дали дадена заявка за осиновяване съществува
         private bool AdoptionExists(int id)
         {
             return _context.Adoption.Any(e => e.Id == id);
         }
 
+        // одобрява заявка за осиновяване и отбелязва котката като осиновена
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Approve(int id)
         {
@@ -216,6 +237,8 @@ namespace CatShelter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // отхвърля заявка за осиновяване
+        // достъпно само за администратори
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Reject(int id)
         {

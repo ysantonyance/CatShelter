@@ -4,6 +4,7 @@
     ViewData["Title"] = "Add New Breed";
 }
 
+// стилове за страницата
 <style>
     body { background-color: #f0f0f0; }
     .page-wrapper {
@@ -19,21 +20,26 @@
 
 <div class="page-wrapper">
 
+        // заглавна част с име на страницата и кратко описание
     <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
         <h3 class="fw-bold mb-0" style="color: #7a3e42;">Add New Breed</h3>
         <p class="mb-0 small" style="color: #7a3e42;">Register a new cat breed to the shelter</p>
     </div>
 
     <div class="p-4 p-md-5">
+        // показване на сумарни грешки от валидацията
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
 
+        // форма за създаване на нова порода
         <form asp-action="Create">
+            // име на породата
             <div class="mb-3">
                 <label asp-for="Name" class="form-label fw-semibold">Breed Name</label>
                 <input asp-for="Name" class="form-control" placeholder="e.g. Persian, Siamese, Maine Coon" />
                 <span asp-validation-for="Name" class="text-danger small"></span>
             </div>
 
+            // описание на породата
             <div class="mb-4">
                 <label asp-for="Description" class="form-label fw-semibold">Description</label>
                 <textarea asp-for="Description" class="form-control" rows="5"
@@ -41,6 +47,7 @@
                 <span asp-validation-for="Description" class="text-danger small"></span>
             </div>
 
+            // бутони за запис и отмяна
             <div class="d-flex gap-2">
                 <button type="submit" class="btn fw-semibold"
                         style="background-color: #f9c6ce; color: #7a3e42; border: none;">
@@ -54,11 +61,13 @@
         </form>
     </div>
 
+    // футър с авторски права
     <div class="text-center py-3" style="background-color: #d4edda;">
         <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
     </div>
 </div>
 
 @section Scripts {
+    // скриптове за валидация
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

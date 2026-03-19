@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace CatShelterTest.Models
 {
+    // тестове за модела care
     public class CareTest
     {
+        // валиден модел трябва да мине валидация
         [Test]
         public void Care_ShouldBeValid_WhenAllFieldsAreProvided()
         {
@@ -25,7 +27,7 @@ namespace CatShelterTest.Models
 
             Assert.IsTrue(isValid);
         }
-
+        // липсващо име на грижа трябва да върне грешка
         [Test]
         public void Care_ShouldFail_WhenCareNameIsMissing()
         {
@@ -41,7 +43,7 @@ namespace CatShelterTest.Models
 
             Assert.IsFalse(isValid);
         }
-
+        // липсващо описание трябва да върне грешка
         [Test]
         public void Care_ShouldFail_WhenDescriptionIsMissing()
         {
@@ -57,7 +59,7 @@ namespace CatShelterTest.Models
 
             Assert.IsFalse(isValid);
         }
-
+        // всички липсващи задължителни полета трябва да върнат грешки
         [Test]
         public void Care_ShouldFail_WhenAllRequiredFieldsMissing()
         {

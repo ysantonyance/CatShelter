@@ -7,8 +7,10 @@ using NUnit.Framework;
 
 namespace CatShelterTest.Models
 {
+    // тестове за модела catcare
     public class CatCareTest
     {
+        // създаване на валиден обект catcare
         private CatCare GetValidCatCare()
         {
             return new CatCare
@@ -20,7 +22,7 @@ namespace CatShelterTest.Models
                 IsSatisfied = false
             };
         }
-
+        // валиден модел трябва да мине валидация
         [Test]
         public void CatCare_ShouldBeValid_WhenAllFieldsProvided()
         {
@@ -33,7 +35,7 @@ namespace CatShelterTest.Models
             Assert.IsTrue(isValid);
             Assert.IsEmpty(results);
         }
-
+        // catid = 0 трябва да върне грешка
         [Test]
         public void CatCare_ShouldFail_WhenCatIdIsZero()
         {
@@ -47,7 +49,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // careid = 0 трябва да върне грешка
         [Test]
         public void CatCare_ShouldFail_WhenCareIdIsZero()
         {
@@ -61,7 +63,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // липсващ userid трябва да върне грешка
         [Test]
         public void CatCare_ShouldFail_WhenUserIdMissing()
         {
@@ -75,7 +77,7 @@ namespace CatShelterTest.Models
             Assert.IsFalse(isValid);
             Assert.IsNotEmpty(results);
         }
-
+        // отрицателна цена трябва да върне грешка
         [Test]
         public void CatCare_ShouldFail_WhenPriceIsNegative()
         {

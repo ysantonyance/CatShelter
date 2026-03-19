@@ -13,6 +13,7 @@ using System.Security.Claims;
 
 namespace CatShelterTest.Controllers
 {
+    // тестове за контролера catcares
     public class CatCaresControllerTests
     {
         private ApplicationDbContext GetDbContext()
@@ -63,7 +64,7 @@ namespace CatShelterTest.Controllers
             };
             return controller;
         }
-
+        // index връща всички записи за грижи
         [Test]
         public async Task Index_ReturnsAllCatCares()
         {
@@ -79,7 +80,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(2, model.Count);
         }
-
+        // details с null id връща notfound
         [Test]
         public async Task Details_NullId_ReturnsNotFound()
         {
@@ -87,7 +88,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Details(null);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // details с валиден id връща view с пълни данни
         [Test]
         public async Task Details_ValidId_ReturnsView()
         {
@@ -105,7 +106,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model.Care);
             Assert.IsNotNull(model.User);
         }
-
+        // create post с валиден модел създава запис и редиректва към index
         [Test]
         public async Task CreatePost_ValidModel_RedirectsToIndex()
         {
@@ -123,7 +124,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual("user1", saved.UserId);
             Assert.IsFalse(saved.IsSatisfied);
         }
-
+        // delete confirmed изтрива запис и редиректва към index
         [Test]
         public async Task DeleteConfirmed_RemovesCatCareAndRedirects()
         {
@@ -137,7 +138,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual("Index", result.ActionName);
             Assert.IsFalse(context.CatCare.Any(cc => cc.Id == 1));
         }
-
+        // edit с невалиден id връща notfound
         [Test]
         public async Task Edit_InvalidId_ReturnsNotFound()
         {

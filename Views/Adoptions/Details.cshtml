@@ -4,6 +4,7 @@
     ViewData["Title"] = "Adoption Details";
 }
 
+// стилове за страницата
 <style>
     body {
         background-color: #f0f0f0;
@@ -22,6 +23,7 @@
 
 <div class="page-wrapper">
 
+    // заглавна част с име и описание на страницата
     <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
         <h3 class="fw-bold mb-0" style="color: #7a3e42;">Adoption Details</h3>
         <p class="mb-0 small" style="color: #7a3e42;">Full information about this adoption record</p>
@@ -29,6 +31,7 @@
 
     <div class="p-4 p-md-5">
 
+        // показване на снимка на котката и нейното име и порода
         <div class="d-flex align-items-center gap-3 p-3 rounded mb-4"
              style="background-color: #fef6f7; border: 1px solid #f9c6ce;">
             @if (!string.IsNullOrEmpty(Model.Cat?.Img))
@@ -43,6 +46,7 @@
             </div>
         </div>
 
+        // детайли за осиновяването като adopter, дата и статус
         <dl class="row mb-0">
             <dt class="col-sm-4 text-muted">Adopter</dt>
             <dd class="col-sm-8">@(Model.User?.UserName ?? Model.User?.Email ?? "Unknown")</dd>
@@ -81,6 +85,7 @@
 
     </div>
 
+    // бутоните за редакция, изтриване и връщане към списъка
     <div class="d-flex gap-2 px-4 pb-4">
         <a asp-action="Edit" asp-route-id="@Model.Id"
                class="btn fw-semibold"
@@ -98,6 +103,7 @@
         </a>
     </div>
 
+    // футър с авторски права
     <div class="text-center py-3" style="background-color: #d4edda;">
         <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
     </div>

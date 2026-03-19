@@ -15,12 +15,14 @@ namespace CatShelter.Controllers
     {
         private readonly ApplicationDbContext _context;
 
+        // конструктор на контролера с инжектиран контекст на базата
         public CatCaresController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: CatCares
+        // извежда списък с всички грижи за котки включително информация за котката, грижата и потребителя
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.CatCare.Include(c => c.Care).Include(c => c.Cat).Include(c => c.User);
@@ -28,6 +30,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: CatCares/Details/5
+        // извежда детайли за конкретна грижа за котка по id
+        // включва информация за котката и породата, грижата и потребителя
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,6 +54,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: CatCares/Create
+        // показва форма за създаване на нова грижа за котка
+        // извлича списъци с налични грижи, котки и потребители
         public IActionResult Create()
         {
             ViewBag.Cares = _context.Care.ToList(); 
@@ -59,6 +65,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: CatCares/Create
+        // обработва POST заявка за създаване на нова грижа за котка
+        // задава текущия потребител, маркира като не удовлетворена и валидира модела
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -94,6 +102,8 @@ namespace CatShelter.Controllers
 
 
         // GET: CatCares/Edit/5
+        // показва форма за редакция на съществуваща грижа за котка
+        // попълва select списъци с грижи, котки и потребители
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -113,6 +123,9 @@ namespace CatShelter.Controllers
         }
 
         // POST: CatCares/Edit/5
+        // обработва post заявка за редакция на грижа за котка
+        // обновява полетата, ако моделът е валиден
+        // само администратор може да промени IsSatisfied
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -166,6 +179,8 @@ namespace CatShelter.Controllers
         }
 
         // GET: CatCares/Delete/5
+        // показва потвърждение за изтриване на грижа за котка
+        // включва информация за котката, породата, грижата и потребителя
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -188,6 +203,8 @@ namespace CatShelter.Controllers
         }
 
         // POST: CatCares/Delete/5
+        // обработва post заявка за изтриване на грижа за котка
+        // премахва записа от базата
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -202,6 +219,7 @@ namespace CatShelter.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // проверява дали дадена грижа за котка съществува по id
         private bool CatCareExists(int id)
         {
             return _context.CatCare.Any(e => e.Id == id);

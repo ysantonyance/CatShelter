@@ -4,6 +4,7 @@
     ViewData["Title"] = Model.Name + " — Breed Details";
 }
 
+// стилове за страницата
 <style>
     body { background-color: #f0f0f0; }
     .page-wrapper {
@@ -19,6 +20,7 @@
 
 <div class="page-wrapper">
 
+    // заглавна част
     <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
         <h3 class="fw-bold mb-0" style="color: #7a3e42;">Breed Details</h3>
         <p class="mb-0 small" style="color: #7a3e42;">Viewing information for this breed</p>
@@ -26,9 +28,11 @@
 
     <div class="p-4 p-md-5">
 
+        // име на породата
         <h4 class="fw-bold mb-1" style="color: #7a3e42;">@Model.Name</h4>
         <hr />
 
+        // описание на породата
         <p class="text-muted text-uppercase small fw-semibold mb-1">Description</p>
         <p>
             @if (string.IsNullOrWhiteSpace(Model.Description))
@@ -41,6 +45,7 @@
             }
         </p>
 
+        // списък с котки от тази порода
         @if (Model.Cats != null && Model.Cats.Any())
         {
             <hr />
@@ -62,6 +67,7 @@
         else
         {
             <hr />
+            // бутоните за редакция, изтриване и връщане
             <p class="text-muted fst-italic">No cats registered under this breed yet.</p>
         }
 
@@ -83,6 +89,7 @@
 
     </div>
 
+    // футър с авторски права
     <div class="text-center py-3" style="background-color: #d4edda;">
         <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
     </div>
