@@ -13,4 +13,5 @@ All web pages use standard HTML/CSS fonts for consistent and readable display.
 ## License
 
 The educational materials were developed for the National Program "IT Skills and Career Training" of the Ministry of Education and Science (MES) and are distributed under a CC-BY-NC-SA (Creative Commons Attribution-Non-Commercial-Share-Alike 4.0 International) license.
+
 Source: [creativecommons.org](https://creativecommons.org/licenses/by-nc-sa/4.0/)
