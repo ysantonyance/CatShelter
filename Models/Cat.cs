@@ -30,7 +30,6 @@ namespace CatShelter.Models
         public bool IsHealthy { get; set; }
         // пол на котката, задължително поле
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Gender must be selected")]
         public Gender Gender { get; set; }
         // описание на котката, задължително поле
         [Required]

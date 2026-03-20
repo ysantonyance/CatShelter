@@ -26,6 +26,21 @@
         <h2 class="fw-bold mb-0" style="color: #155724;">Cat Breeds</h2>
         <p class="text-muted mb-0">All registered breeds in the shelter</p>
     </div>
+    <form asp-action="Index" method="get" class="d-flex gap-2 mb-4">
+        <input type="text" name="search" value="@ViewBag.Search"
+               class="form-control" placeholder="Search by breed name..." />
+        <button type="submit" class="btn fw-semibold"
+                style="background-color: #d4edda; color: #155724; border: 1px solid #b8dfc4;">
+            Search
+        </button>
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string))
+        {
+            <a asp-action="Index" class="btn fw-semibold"
+                   style="background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7;">
+                Clear
+            </a>
+        }
+    </form>
 
     <div class="p-4">
 

@@ -103,35 +103,79 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy, Description Id")] Cat cat)
+        public async Task<IActionResult> Edit(int id, Cat cat, IFormFile? imageFile)
         {
             if (id != cat.Id)
-            {
                 return NotFound();
+
+            var existingCat = await _context.Cat.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+
+            if (imageFile == null)
+            {
+                ModelState.Remove("Img");
+                cat.Img = existingCat?.Img;
+            }
+            else if (imageFile.Length > 0)
+            {
+                var allowed = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                if (!allowed.Contains(ext))
+                {
+                    ModelState.AddModelError("Img", "Only image files are allowed.");
+                }
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
+                foreach (var kvp in ModelState.Where(x => x.Value.Errors.Any()))
+                    Console.WriteLine($"INVALID FIELD: {kvp.Key}");
+
+                ViewBag.Breeds = await _context.Breed.ToListAsync();
+                return View(cat);
+            }
+
+            try
+            {
+                if (imageFile != null && imageFile.Length > 0)
                 {
-                    _context.Update(cat);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CatExists(cat.Id))
+                    try
                     {
-                        return NotFound();
+                        string fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
+                        string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cats");
+                        Directory.CreateDirectory(uploadPath);
+
+                        string filePath = Path.Combine(uploadPath, fileName);
+
+                        using var stream = new FileStream(filePath, FileMode.Create);
+                        await imageFile.CopyToAsync(stream);
+
+                        if (!string.IsNullOrEmpty(existingCat?.Img))
+                        {
+                            string oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
+                                existingCat.Img.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                            if (System.IO.File.Exists(oldPath))
+                                System.IO.File.Delete(oldPath);
+                        }
+
+                        cat.Img = "/uploads/cats/" + fileName;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        throw;
+                        ModelState.AddModelError("", "Image upload failed: " + ex.Message);
+                        ViewBag.Breeds = await _context.Breed.ToListAsync();
+                        return View(cat);
                     }
                 }
+
+                _context.Update(cat);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BreedId"] = new SelectList(_context.Breed, "Id", "Id", cat.BreedId);
-            return View(cat);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CatExists(cat.Id)) return NotFound();
+                throw;
+            }
         }
 
         // GET: Cats/Delete/5
@@ -201,6 +245,5 @@ namespace CatShelter.Controllers
 
             return View();
         }
-
     }
 }

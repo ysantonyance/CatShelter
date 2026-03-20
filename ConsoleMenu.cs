@@ -9,6 +9,7 @@ public class ConsoleMenu
     private readonly ApplicationDbContext _context;
     // дали потребителят е администратор
     private readonly bool _isAdmin;
+    private string _currentEmail = ""; 
 
     // конструктор за инициализация на менюто
     public ConsoleMenu(ApplicationDbContext context, bool isAdmin = false)
@@ -24,6 +25,8 @@ public class ConsoleMenu
         {
             Console.Clear(); // изчиства конзолата
             Console.WriteLine("CAT SHELTER"); // заглавие на приложението
+            Console.Write("Enter your email: ");
+            _currentEmail = Console.ReadLine();
 
             // проверка дали е администратор
             if (_isAdmin)
@@ -39,7 +42,7 @@ public class ConsoleMenu
                 if (_isAdmin)
                     AdminMenu(); // отваряне на админ меню
                 else
-                    UserMenu(); // извикване на потребителско меню
+                    UserMenu(_currentEmail); // извикване на потребителско меню
             }
             else if (choice == "2")
             {
@@ -49,7 +52,7 @@ public class ConsoleMenu
     }
 
     // меню за обикновен потребител
-    private void UserMenu()
+    private void UserMenu(string currentEmail)
     {
         while (true)
         {
@@ -70,10 +73,10 @@ public class ConsoleMenu
                     ViewCatDetails(); // детайли за котка
                     break;
                 case "3": 
-                    CreateAdoption(); // създаване на заявка за осиновяване 
+                    CreateAdoption(currentEmail); // създаване на заявка за осиновяване 
                     break;
                 case "4": 
-                    CreateCatCare(); // създаване на запис за грижа/дарение
+                    CreateCatCare(currentEmail); // създаване на запис за грижа/дарение
                     break;
                 case "5": 
                     return; // връщане назад
@@ -197,7 +200,6 @@ public class ConsoleMenu
         // въвеждане на път до изображение
         Console.Write("Image (path): ");
         string img = Console.ReadLine();
-        Console.Write("Is Healthy? (y/n): ");
         Console.Write("Is Healthy? (y/n): ");
         bool isHealthy = Console.ReadLine().ToLower() == "y";
 
@@ -468,9 +470,17 @@ public class ConsoleMenu
         Console.ReadKey();
     }
     // създаване на нова заявка за осиновяване
-    private void CreateAdoption()
+    private void CreateAdoption(string currentEmail)
     {
         Console.Clear();
+        var user = _context.Users.FirstOrDefault(u => u.Email == currentEmail);
+        if (user == null)
+        {
+            Console.WriteLine("User not found.");
+            Console.ReadKey();
+            return;
+        }
+
         var availableCats = _context.Cat.Where(c => !c.IsAdopted).ToList();
         if (!availableCats.Any())
         {
@@ -495,7 +505,6 @@ public class ConsoleMenu
         _context.Adoption.Add(new Adoption
         {
             CatId = catId,
-            UserId = userId,
             AdoptionDate = DateOnly.FromDateTime(DateTime.Now),
             Status = ApplicationStatus.Pending
         });
@@ -560,7 +569,7 @@ public class ConsoleMenu
                     ListCatCare(); 
                     break;
                 case "2": 
-                    CreateCatCare(); 
+                    CreateCatCare(_currentEmail); 
                     break;
                 case "3": 
                     MarkCareSatisfied();
@@ -583,8 +592,16 @@ public class ConsoleMenu
         Console.ReadKey();
     }
     // създаване на нов запис за грижа/дарение
-    private void CreateCatCare()
+    private void CreateCatCare(string currentEmail)
     {
+        var user = _context.Users.FirstOrDefault(u => u.Email == currentEmail);
+        if (user == null)
+        {
+            Console.WriteLine("User not found.");
+            Console.ReadKey();
+            return;
+        }
+
         Console.Clear();
         var cats = _context.Cat.ToList();
         Console.WriteLine("Cats:");
@@ -614,7 +631,6 @@ public class ConsoleMenu
         {
             CatId = catId,
             CareId = careId,
-            UserId = userId,
             Price = price,
             IsSatisfied = false
         });

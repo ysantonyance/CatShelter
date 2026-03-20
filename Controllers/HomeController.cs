@@ -1,14 +1,27 @@
+using CatShelter.Data;
 using CatShelter.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace CatShelter.Controllers
 {
     public class HomeController : Controller
     {
-        // показва началната страница
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
         {
+            _context = context;
+        }
+
+        // показва началната страница
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.CatCount = await _context.Cat.CountAsync();
+            ViewBag.AdoptionCount = await _context.Adoption.CountAsync();
+            ViewBag.CareSessionCount = await _context.CatCare.CountAsync();
+            ViewBag.BreedCount = await _context.Breed.CountAsync();
             return View();
         }
 

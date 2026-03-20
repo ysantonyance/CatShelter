@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Thank You!";
+}
+
+<style>
+    body { background-color: #f0f0f0; }
+    .page-wrapper {
+        max-width: 550px;
+        margin: 60px auto;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="text-center py-4 px-3" style="background-color: #d4edda;">
+        <h3 class="fw-bold mb-0" style="color: #2e5e3e;">🐱 Thank You!</h3>
+        <p class="mb-0 small" style="color: #4a7c59;">Your donation has been recorded</p>
+    </div>
+
+    <div class="p-4 p-md-5 text-center">
+        <p class="fs-5 mb-1">You donated <strong>@TempData["DonationAmount"] BGN</strong></p>
+        <p class="mb-1">for <strong>@TempData["DonationCare"]</strong></p>
+        <p class="text-muted">to <strong>@TempData["DonationCat"]</strong> 🐾</p>
+
+        <hr />
+
+        <div class="d-flex gap-2 justify-content-center mt-3">
+            <a asp-action="Donate" class="btn fw-semibold"
+               style="background-color: #f9c6ce; color: #7a3e42; border: none;">
+                Donate Again
+            </a>
+            <a asp-controller="Home" asp-action="Index" class="btn fw-semibold"
+               style="background-color: #d4edda; color: #2e5e3e; border: none;">
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center py-3" style="background-color: #d4edda;">
+        <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
+    </div>
+</div>

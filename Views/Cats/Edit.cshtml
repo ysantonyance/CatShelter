@@ -21,18 +21,32 @@
 </style>
 
 <div class="page-wrapper">
-
     <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
         <h3 class="fw-bold mb-0" style="color: #7a3e42;">Edit Cat — @Model.Name</h3>
         <p class="mb-0 small" style="color: #7a3e42;">Update the details for this cat</p>
     </div>
 
     <div class="p-4 p-md-5">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Please fix the following errors:</strong>
+                <ul class="mb-0 mt-2">
+                    @foreach (var modelState in ViewData.ModelState.Values)
+                    {
+                        foreach (var error in modelState.Errors)
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    }
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
 
-        <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
-
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Img" />
 
             <div class="mb-3">
                 <label asp-for="Name" class="form-label fw-semibold"></label>
@@ -42,9 +56,8 @@
 
             <div class="mb-3">
                 <label asp-for="BreedId" class="form-label fw-semibold">Breed</label>
-                <select asp-for="BreedId"
-                        asp-items="@(new SelectList(ViewBag.Breeds, "Id", "Name"))"
-                        class="form-select">
+                <select asp-for="BreedId" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.Breeds, "Id", "Name", Model.BreedId))">
                     <option value="">-- Select Breed --</option>
                 </select>
                 <span asp-validation-for="BreedId" class="text-danger small"></span>
@@ -61,33 +74,35 @@
 
             <div class="mb-3">
                 <label asp-for="BirthDate" class="form-label fw-semibold"></label>
-                <input asp-for="BirthDate" class="form-control" type="date" />
+                <input asp-for="BirthDate" class="form-control" type="date"
+                       value="@Model.BirthDate.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="BirthDate" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Kg" class="form-label fw-semibold">Weight (kg)</label>
-                <input asp-for="Kg" class="form-control" type="number" step="0.1" min="0" />
+                <input asp-for="Kg" class="form-control" type="number" step="any" min="0.1" />
                 <span asp-validation-for="Kg" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Description" class="form-label fw-semibold">Description / Health Notes</label>
-                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                <textarea asp-for="Description" class="form-control" rows="3">@Model.Description</textarea>
                 <span asp-validation-for="Description" class="text-danger small"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Img" class="form-label fw-semibold">Image URL</label>
-                <input asp-for="Img" class="form-control" />
+                <label class="form-label fw-semibold">Current Image</label>
                 @if (!string.IsNullOrEmpty(Model.Img))
                 {
-                    <div class="mt-2">
-                        <small class="text-muted">Current image:</small><br />
-                        <img src="@Model.Img" alt="Current" class="mt-1 rounded"
-                             style="height:100px; object-fit:cover; border: 2px solid #f9c6ce;" />
+                    <div class="mb-2">
+                        <img src="@Model.Img" alt="@Model.Name"
+                             style="max-height: 150px; width: auto; border: 2px solid #f9c6ce; border-radius: 8px;" />
                     </div>
                 }
+                <label asp-for="Img" class="form-label fw-semibold">Upload New Image (optional)</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                <small class="text-muted">Leave empty to keep current image</small>
                 <span asp-validation-for="Img" class="text-danger small"></span>
             </div>
 
@@ -103,25 +118,22 @@
             </div>
 
             <div class="d-flex gap-2">
-                <button type="submit" class="btn fw-semibold"
+                <button type="submit" class="btn fw-semibold px-4"
                         style="background-color: #f9c6ce; color: #7a3e42; border: none;">
-                    Save Changes
+                    <i class="bi bi-save"></i> Save Changes
                 </button>
                 <a asp-action="Details" asp-route-id="@Model.Id"
-                       class="btn"
+                       class="btn fw-semibold px-4"
                        style="background-color: #d4edda; color: #2e5e3e; border: none;">
-                    Cancel
+                    <i class="bi bi-x-circle"></i> Cancel
                 </a>
             </div>
-
         </form>
-
     </div>
 
     <div class="text-center py-3" style="background-color: #d4edda;">
         <small style="color: #4a7c59;">&copy; @DateTime.Now.Year Paws &amp; Hearts Cat Shelter</small>
     </div>
-
 </div>
 
 @section Scripts {

@@ -13,8 +13,10 @@ using System.Security.Claims;
 
 namespace CatShelterTest.Controllers
 {
+    // тестове за контролера breeds
     public class BreedsControllerTests
     {
+        // създаване на in-memory db контекст с няколко породи
         private ApplicationDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -30,7 +32,7 @@ namespace CatShelterTest.Controllers
             context.SaveChanges();
             return context;
         }
-
+        // създаване на потребител с роля
         private ClaimsPrincipal GetUser(string role = "")
         {
             var claims = new List<Claim>();
@@ -39,7 +41,7 @@ namespace CatShelterTest.Controllers
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"));
         }
-
+        // създаване на контролер с httpcontext и потребител
         private BreedsController CreateController(ApplicationDbContext context, string role = "")
         {
             var controller = new BreedsController(context);
@@ -52,20 +54,20 @@ namespace CatShelterTest.Controllers
             };
             return controller;
         }
-
+        // index връща всички породи
         [Test]
         public async Task Index_ReturnsAllBreeds()
         {
             var context = GetDbContext();
             var controller = CreateController(context);
 
-            var result = await controller.Index() as ViewResult;
+            var result = await controller.Index(null) as ViewResult;
             var model = result.Model as List<Breed>;
 
             Assert.IsNotNull(model);
             Assert.AreEqual(2, model.Count);
         }
-
+        // details с null id връща notfound
         [Test]
         public async Task Details_NullId_ReturnsNotFound()
         {
@@ -73,7 +75,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Details(null);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // details с валиден id връща view с модела
         [Test]
         public async Task Details_ValidId_ReturnsView()
         {
@@ -87,7 +89,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual(1, model.Id);
             Assert.AreEqual("Siamese", model.Name);
         }
-
+        // create post с валиден модел редиректва към index
         [Test]
         public async Task CreatePost_ValidModel_RedirectsToIndex()
         {
@@ -103,7 +105,7 @@ namespace CatShelterTest.Controllers
             var saved = context.Breed.FirstOrDefault(b => b.Name == "Maine Coon");
             Assert.IsNotNull(saved);
         }
-
+        // edit с валиден id връща view с модела
         [Test]
         public async Task Edit_ValidId_ReturnsView()
         {
@@ -116,7 +118,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(1, model.Id);
         }
-
+        // edit с невалиден id връща notfound
         [Test]
         public async Task Edit_InvalidId_ReturnsNotFound()
         {
@@ -124,7 +126,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Edit(999);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // delete с валиден id връща view с модела
         [Test]
         public async Task Delete_ValidId_ReturnsView()
         {
@@ -137,7 +139,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(1, model.Id);
         }
-
+        // delete с невалиден id връща notfound
         [Test]
         public async Task Delete_InvalidId_ReturnsNotFound()
         {
@@ -145,7 +147,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Delete(999);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // delete confirmed премахва породата и редиректва към index
         [Test]
         public async Task DeleteConfirmed_RemovesBreedAndRedirects()
         {

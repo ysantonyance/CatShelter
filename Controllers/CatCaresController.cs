@@ -224,5 +224,109 @@ namespace CatShelter.Controllers
         {
             return _context.CatCare.Any(e => e.Id == id);
         }
+
+        // GET: CatCares/Donate
+        // показва форма за дарение - с или без избор на котка
+        public async Task<IActionResult> Donate()
+        {
+            ViewBag.Cares = await _context.Care.ToListAsync();
+            ViewBag.UnhealthyCats = await _context.Cat
+                .Include(c => c.Breed)
+                .Where(c => !c.IsHealthy)
+                .ToListAsync();
+
+            return View();
+        }
+
+        // POST: CatCares/Donate
+        // обработва дарение - ако няма избрана котка, избира тази с най-малко дарения
+        // ако никоя няма дарения, избира случайна
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Donate(int? catId, int careId, decimal price)
+        {
+            if (price <= 0)
+            {
+                ModelState.AddModelError("", "Amount must be greater than 0.");
+                ViewBag.Cares = await _context.Care.ToListAsync();
+                ViewBag.UnhealthyCats = await _context.Cat
+                    .Include(c => c.Breed)
+                    .Where(c => !c.IsHealthy)
+                    .ToListAsync();
+                return View();
+            }
+
+            // ако няма избрана котка, намираме най-нуждаещата се
+            if (catId == null)
+            {
+                var unhealthyCats = await _context.Cat
+                    .Where(c => !c.IsHealthy)
+                    .ToListAsync();
+
+                if (!unhealthyCats.Any())
+                {
+                    ModelState.AddModelError("", "There are no unhealthy cats to donate to right now.");
+                    ViewBag.Cares = await _context.Care.ToListAsync();
+                    ViewBag.UnhealthyCats = new List<Cat>();
+                    return View();
+                }
+
+                // броим даренията за всяка котка
+                var catDonationCounts = await _context.CatCare
+                    .GroupBy(cc => cc.CatId)
+                    .Select(g => new { CatId = g.Key, Count = g.Count() })
+                    .ToListAsync();
+
+                // котки без нито едно дарение
+                var catsWithNoDonations = unhealthyCats
+                    .Where(c => !catDonationCounts.Any(d => d.CatId == c.Id))
+                    .ToList();
+
+                if (catsWithNoDonations.Any())
+                {
+                    // случайна котка без дарения
+                    var random = new Random();
+                    catId = catsWithNoDonations[random.Next(catsWithNoDonations.Count)].Id;
+                }
+                else
+                {
+                    // котката с най-малко дарения
+                    var minCount = catDonationCounts
+                        .Where(d => unhealthyCats.Any(c => c.Id == d.CatId))
+                        .Min(d => d.Count);
+
+                    catId = catDonationCounts
+                        .Where(d => unhealthyCats.Any(c => c.Id == d.CatId) && d.Count == minCount)
+                        .First().CatId;
+                }
+            }
+
+            var catCare = new CatCare
+            {
+                CatId = catId.Value,
+                CareId = careId,
+                Price = price,
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                IsSatisfied = false
+            };
+
+            _context.Add(catCare);
+            await _context.SaveChangesAsync();
+
+            // запазваме info за confirmation страницата
+            var cat = await _context.Cat.FindAsync(catId);
+            var care = await _context.Care.FindAsync(careId);
+            TempData["DonationCat"] = cat?.Name;
+            TempData["DonationCare"] = care?.CareName;
+            TempData["DonationAmount"] = price.ToString("F2");
+
+            return RedirectToAction(nameof(DonationConfirmation));
+        }
+
+        // GET: CatCares/DonationConfirmation
+        public IActionResult DonationConfirmation()
+        {
+            return View();
+        }
     }
 }

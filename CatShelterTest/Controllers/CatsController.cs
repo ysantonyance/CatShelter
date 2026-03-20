@@ -42,7 +42,8 @@ namespace CatShelterTest.Controllers
                 Description = "Friendly cat",
                 BreedId = breed.Id,
                 IsAdopted = false,
-                IsHealthy = true
+                IsHealthy = true,
+                Gender = Gender.Male  // Added missing Gender
             };
 
             var cat2 = new Cat
@@ -55,7 +56,8 @@ namespace CatShelterTest.Controllers
                 Description = "Playful kitten",
                 BreedId = breed.Id,
                 IsAdopted = false,
-                IsHealthy = true
+                IsHealthy = true,
+                Gender = Gender.Female  // Added missing Gender
             };
 
             context.Cat.AddRange(cat1, cat2);
@@ -86,6 +88,7 @@ namespace CatShelterTest.Controllers
             return controller;
         }
 
+        // index връща всички котки
         [Test]
         public async Task Index_ReturnsAllCats()
         {
@@ -99,6 +102,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual(2, model.Count);
         }
 
+        // details с валиден id връща котка с данни
         [Test]
         public async Task Details_ValidId_ReturnsCat()
         {
@@ -114,6 +118,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model.Breed);
         }
 
+        // details с невалиден id връща notfound
         [Test]
         public async Task Details_InvalidId_ReturnsNotFound()
         {
@@ -124,6 +129,7 @@ namespace CatShelterTest.Controllers
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
+        // create post с валиден модел добавя котка и редиректва
         [Test]
         public async Task CreatePost_ValidModel_RedirectsToIndex()
         {
@@ -139,7 +145,8 @@ namespace CatShelterTest.Controllers
                 Description = "Cute kitten",
                 BreedId = 1,
                 IsAdopted = false,
-                IsHealthy = true
+                IsHealthy = true,
+                Gender = Gender.Male  // Added missing Gender
             };
 
             var result = await controller.Create(newCat) as RedirectToActionResult;
@@ -149,17 +156,36 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual(3, context.Cat.Count());
         }
 
-        [Test]
+        // edit с невалиден id връща notfound
+        [Test]  // Changed from [TestMethod] to [Test] for NUnit
         public async Task Edit_InvalidId_ReturnsNotFound()
         {
+            // Use your helper methods instead of creating new ones
             var context = GetDbContext();
             var controller = CreateController(context);
 
-            var cat = new Cat { Id = 999, Name = "Fake", BreedId = 1, Img = "fake.jpg", Description = "Fake cat" };
-            var result = await controller.Edit(999, cat);
+            var cat = new Cat
+            {
+                Id = 999,
+                Name = "Fake",
+                BreedId = 1,
+                Gender = Gender.Male,
+                BirthDate = new DateOnly(2020, 1, 1),
+                Kg = 4.5m,
+                Img = "fake.jpg",
+                Description = "Fake cat",
+                IsAdopted = false,
+                IsHealthy = true
+            };
+
+            // Act
+            var result = await controller.Edit(999, cat, null);
+
+            // Assert - use IsInstanceOf for NUnit
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
 
+        // delete confirmed изтрива котка и редиректва към index
         [Test]
         public async Task DeleteConfirmed_RemovesCat()
         {
@@ -170,7 +196,7 @@ namespace CatShelterTest.Controllers
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.ActionName);
-            Assert.AreEqual(1, context.Cat.Count()); 
+            Assert.AreEqual(1, context.Cat.Count());
         }
     }
 }

@@ -14,8 +14,10 @@ using System.Linq;
 
 namespace CatShelterTest.Controllers
 {
+    // тестове за контролера adoptions
     public class AdoptionsControllerTests
     {
+        // създаване на in-memory db контекст
         private ApplicationDbContext GetDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -32,14 +34,14 @@ namespace CatShelterTest.Controllers
             context.SaveChanges();
             return context;
         }
-
+        // мок user manager за identity
         private UserManager<ApplicationUser> GetUserManager()
         {
             var store = new Mock<IUserStore<ApplicationUser>>();
             return new UserManager<ApplicationUser>(
                 store.Object, null, null, null, null, null, null, null, null);
         }
-
+        // създаване на потребител с claims
         private ClaimsPrincipal GetUser(string userId = "user1", string role = "")
         {
             var claims = new List<Claim> { new Claim(ClaimTypes.NameIdentifier, userId) };
@@ -47,7 +49,7 @@ namespace CatShelterTest.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "TestAuth"));
         }
-
+        // създаване на контролер с httpcontext и потребител
         private AdoptionsController CreateController(ApplicationDbContext context, string userId = "user1", string role = "")
         {
             var controller = new AdoptionsController(context, GetUserManager());
@@ -60,7 +62,7 @@ namespace CatShelterTest.Controllers
             };
             return controller;
         }
-
+        // index за редовен потребител показва само неговите заявки
         [Test]
         public async Task Index_ShouldReturnViewForRegularUser()
         {
@@ -84,7 +86,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual(1, model.Count);
             Assert.AreEqual("user1", model[0].UserId);
         }
-
+        // index за админ показва всички заявки
         [Test]
         public async Task Index_ShouldReturnViewForAdmin()
         {
@@ -105,7 +107,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model);
             Assert.AreEqual(2, model.Count);
         }
-
+        // details с null id връща notfound
         [Test]
         public async Task Details_NullId_ReturnsNotFound()
         {
@@ -113,7 +115,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Details(null);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // details с валиден id връща view с модела
         [Test]
         public async Task Details_ValidId_ReturnsView()
         {
@@ -144,7 +146,7 @@ namespace CatShelterTest.Controllers
             Assert.IsNotNull(model.Cat);
             Assert.IsNotNull(model.User);
         }
-
+        // create post с валиден модел редиректва към index
         [Test]
         public async Task CreatePost_ValidModel_RedirectsToIndex()
         {
@@ -161,7 +163,7 @@ namespace CatShelterTest.Controllers
             Assert.AreEqual(ApplicationStatus.Pending, saved.Status);
             Assert.AreEqual("user1", saved.UserId);
         }
-
+        // create post с невалиден модел връща view
         [Test]
         public async Task CreatePost_InvalidModel_ReturnsView()
         {
@@ -174,7 +176,7 @@ namespace CatShelterTest.Controllers
 
             Assert.IsNotNull(result);
         }
-
+        // approve валидно id променя статуса и котката става adopted
         [Test]
         public async Task Approve_ValidId_SetsApprovedAndCatIsAdopted()
         {
@@ -192,7 +194,7 @@ namespace CatShelterTest.Controllers
             Assert.IsTrue(cat.IsAdopted);
             Assert.AreEqual("Index", result.ActionName);
         }
-
+        // approve невалидно id връща notfound
         [Test]
         public async Task Approve_InvalidId_ReturnsNotFound()
         {
@@ -200,7 +202,7 @@ namespace CatShelterTest.Controllers
             var result = await controller.Approve(999);
             Assert.IsInstanceOf<NotFoundResult>(result);
         }
-
+        // reject валидно id променя статуса на denied
         [Test]
         public async Task Reject_ValidId_SetsDenied()
         {

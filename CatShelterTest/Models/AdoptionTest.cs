@@ -93,7 +93,7 @@ namespace CatShelterTest.Models
             var isValid = Validator.TryValidateObject(adoption, context, results, true);
 
             Assert.IsFalse(isValid);
-            Assert.IsTrue(results.Count >= 3); 
+            Assert.IsTrue(results.Count >= 3);
         }
     }
 }

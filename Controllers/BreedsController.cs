@@ -23,9 +23,15 @@ namespace CatShelter.Controllers
 
         // GET: Breeds
         // извежда списък с всички породи
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search)
         {
-            return View(await _context.Breed.ToListAsync());
+            var breeds = _context.Breed.Include(b => b.Cats).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                breeds = breeds.Where(b => b.Name.Contains(search));
+
+            ViewBag.Search = search;
+            return View(await breeds.ToListAsync());
         }
 
         // GET: Breeds/Details/5

@@ -4,7 +4,6 @@
     ViewData["Title"] = "Edit Adoption";
 }
 
-// стилове за страницата
 <style>
     body {
         background-color: #f0f0f0;
@@ -23,7 +22,6 @@
 
 <div class="page-wrapper">
 
-    // заглавна част с име и описание на страницата
     <div class="text-center py-4 px-3" style="background-color: #f9c6ce;">
         <h3 class="fw-bold mb-0" style="color: #7a3e42;">Edit Adoption</h3>
         <p class="mb-0 small" style="color: #7a3e42;">Update the details for this adoption record</p>
@@ -31,14 +29,11 @@
 
     <div class="p-4 p-md-5">
 
-        // показване на валидационни грешки за модела
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
 
-        // форма за редакция на осиновяване
         <form asp-action="Edit">
             <input type="hidden" asp-for="Id" />
 
-            // избор на котка
             <div class="mb-3">
                 <label asp-for="CatId" class="form-label fw-semibold">Cat</label>
                 <select asp-for="CatId" class="form-select" asp-items="ViewBag.CatId">
@@ -47,7 +42,6 @@
                 <span asp-validation-for="CatId" class="text-danger small"></span>
             </div>
 
-            // избор на осиновител
             <div class="mb-3">
                 <label asp-for="UserId" class="form-label fw-semibold">Adopter</label>
                 <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
@@ -56,14 +50,12 @@
                 <span asp-validation-for="UserId" class="text-danger small"></span>
             </div>
 
-            // дата на осиновяване
             <div class="mb-3">
                 <label asp-for="AdoptionDate" class="form-label fw-semibold">Adoption Date</label>
                 <input asp-for="AdoptionDate" class="form-control" type="date" />
                 <span asp-validation-for="AdoptionDate" class="text-danger small"></span>
             </div>
 
-            // избор на статус само за администратори
             @if (User.IsInRole("Admin"))
             {
                 <div class="mb-4">
@@ -76,7 +68,6 @@
             }
             else
             {
-                // за обикновени потребители статусът е само за четене
                 <input type="hidden" asp-for="Status" />
 
                 <div class="mb-4">
@@ -85,7 +76,6 @@
                 </div>
             }
 
-            // бутоните за запис и отказ
             <div class="d-flex gap-2">
                 <button type="submit" class="btn fw-semibold"
                         style="background-color: #f9c6ce; color: #7a3e42; border: none;">
@@ -111,7 +101,6 @@
 
 @section Scripts {
     @{
-        // добавяне на стандартни валидационни скриптове
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

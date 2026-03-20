@@ -34,9 +34,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#adoptions" style="color: #7a3e42;">Adoptions</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#care" style="color: #7a3e42;">Care</a>
-                    </li>
+                    <a asp-controller="CatCares" asp-action="Donate" class="nav-link">Donate</a>
                     <li class="nav-item">
                         <a asp-controller="Cats" asp-action="AdoptionStatus"
                            class="nav-link" style="color: #7a3e42;">Adoption Status</a>
@@ -71,7 +69,7 @@
                 </a>
             </div>
             <div class="col-md-6 text-center mt-4 mt-md-0">
-                <img src="https://images.unsplash.com/photo-1628655748136-0a28048469cc?w=600&q=80"
+                <img src="~/imgs/photo-1628655748136-0a28048469cc.jpg"
                      alt="Cat at shelter"
                      class="img-fluid rounded-4 shadow"
                      style="max-height: 400px; width: 100%; object-fit: cover;" />
@@ -82,19 +80,19 @@
     <div style="background-color: #f9c6ce; padding: 20px 40px;">
         <div class="row text-center">
             <div class="col-6 col-md-3 mb-2 mb-md-0">
-                <h4 class="fw-bold mb-0" style="color: #7a3e42;">47</h4>
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">@ViewBag.CatCount</h4>
                 <small style="color: #7a3e42;">Cats in Our Care</small>
             </div>
             <div class="col-6 col-md-3 mb-2 mb-md-0">
-                <h4 class="fw-bold mb-0" style="color: #7a3e42;">312</h4>
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">@ViewBag.AdoptionCount</h4>
                 <small style="color: #7a3e42;">Successful Adoptions</small>
             </div>
             <div class="col-6 col-md-3">
-                <h4 class="fw-bold mb-0" style="color: #7a3e42;">1,800+</h4>
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">@ViewBag.CareSessionCount</h4>
                 <small style="color: #7a3e42;">Care Sessions Given</small>
             </div>
             <div class="col-6 col-md-3">
-                <h4 class="fw-bold mb-0" style="color: #7a3e42;">24</h4>
+                <h4 class="fw-bold mb-0" style="color: #7a3e42;">@ViewBag.BreedCount</h4>
                 <small style="color: #7a3e42;">Breeds Registered</small>
             </div>
         </div>
@@ -107,7 +105,7 @@
         <div class="row g-4">
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1579962949542-91f33736528e?w=400&q=80"
+                    <img src="~/imgs/photo-1579962949542-91f33736528e.jpg"
                          class="card-img-top" alt="Our Cats"
                          style="height: 180px; object-fit: cover;" />
                     <div class="card-body text-center">
@@ -123,7 +121,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1770181180521-c1fdac4f3b33?w=400&q=80"
+                    <img src="~/imgs/photo-1770181180521-c1fdac4f3b33.jpg"
                          class="card-img-top" alt="Adoptions"
                          style="height: 180px; object-fit: cover;" />
                     <div class="card-body text-center">
@@ -139,7 +137,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1589433314716-f60dc2d9a969?w=400&q=80"
+                    <img src="~/imgs/photo-1589433314716-f60dc2d9a969.jpg"
                          class="card-img-top" alt="Cat Care"
                          style="height: 180px; object-fit: cover;" />
                     <div class="card-body text-center">
@@ -155,7 +153,7 @@
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="card h-100 shadow-sm border-0">
-                    <img src="https://images.unsplash.com/photo-1765358247019-d271bc8a8e8b?w=400&q=80"
+                    <img src="~/imgs/photo-1765358247019-d271bc8a8e8b.jpg"
                          class="card-img-top" alt="Breeds"
                          style="height: 180px; object-fit: cover;" />
                     <div class="card-body text-center">

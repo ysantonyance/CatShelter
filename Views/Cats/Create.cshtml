@@ -43,7 +43,7 @@
                 <select asp-for="BreedId"
                         asp-items="@(new SelectList(ViewBag.Breeds, "Id", "Name"))"
                         class="form-select">
-                    <option value="">-- Select Breed --</option>
+                    <option value=""> Select Breed </option>
                 </select>
                 <span asp-validation-for="BreedId" class="text-danger small"></span>
             </div>
@@ -52,7 +52,7 @@
                 <label asp-for="Gender" class="form-label fw-semibold">Gender</label>
                 <select asp-for="Gender" class="form-select"
                         asp-items="Html.GetEnumSelectList<CatShelter.Models.Gender>()">
-                    <option value="">-- Select Gender --</option>
+                    <option value=""> Select Gender </option>
                 </select>
                 <span asp-validation-for="Gender" class="text-danger small"></span>
             </div>
@@ -76,9 +76,10 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Img" class="form-label fw-semibold">Image URL</label>
-                <input asp-for="Img" class="form-control" placeholder="https://..." />
+                <label asp-for="Img" class="form-label fw-semibold">Cat Image</label>
+                <input type="file" name="imageFile" id="imageFile" class="form-control" accept="image/*" />
                 <span asp-validation-for="Img" class="text-danger small"></span>
+                <small class="text-muted">Upload a photo of the cat (JPG, PNG, GIF)</small>
             </div>
 
             <div class="mb-4 d-flex gap-4">
