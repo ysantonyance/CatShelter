@@ -53,8 +53,15 @@ namespace CatShelter.Controllers
         // извлича списък с породи за селект
         public IActionResult Create()
         {
-            ViewBag.Breeds = _context.Breed.ToList();
-            return View();
+            try
+            {
+                ViewBag.Breeds = _context.Breed.ToList();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return Content("CRASH IN GET: " + ex.ToString());
+            }
         }
 
         // POST: Cats/Create
@@ -64,16 +71,38 @@ namespace CatShelter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,BirthDate,Kg,Img,BreedId,IsAdopted,IsHealthy,Description, Id")] Cat cat)
+        public async Task<IActionResult> Create([Bind("Name,BirthDate,Kg,BreedId,IsAdopted,IsHealthy,Gender,Description,Id")] Cat cat, IFormFile? imageFile)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(cat);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                ModelState.Remove("Img"); 
+
+                if (ModelState.IsValid)
+                {
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        string fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
+                        string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cats");
+                        Directory.CreateDirectory(uploadPath);
+
+                        using var stream = new FileStream(Path.Combine(uploadPath, fileName), FileMode.Create);
+                        await imageFile.CopyToAsync(stream);
+
+                        cat.Img = "/uploads/cats/" + fileName;
+                    }
+
+                    _context.Add(cat);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+
+                ViewBag.Breeds = _context.Breed.ToList();
+                return View(cat);
             }
-            ViewBag.Breeds = _context.Breed.ToList(); 
-            return View(cat);
+            catch (Exception ex)
+            {
+                return Content("CRASH: " + ex.ToString());
+            }
         }
 
 

@@ -45,7 +45,8 @@ namespace CatShelter.Controllers
             }
 
             var breed = await _context.Breed
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(b => b.Cats)
+                .FirstOrDefaultAsync(b => b.Id == id);
             if (breed == null)
             {
                 return NotFound();

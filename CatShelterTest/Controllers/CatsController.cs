@@ -149,7 +149,7 @@ namespace CatShelterTest.Controllers
                 Gender = Gender.Male  // Added missing Gender
             };
 
-            var result = await controller.Create(newCat) as RedirectToActionResult;
+            var result = await controller.Create(newCat, null) as RedirectToActionResult;
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Index", result.ActionName);

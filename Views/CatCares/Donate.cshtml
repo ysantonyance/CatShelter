@@ -42,7 +42,7 @@
             <div class="mb-3">
                 <label class="form-label fw-semibold">Cat (optional)</label>
                 <select name="catId" class="form-select">
-                    <option value="">-- Let us choose the most needy cat --</option>
+                    <option value=""> Let us choose the most needy cat </option>
                     @foreach (var cat in ViewBag.UnhealthyCats as List<CatShelter.Models.Cat>)
                     {
                         <option value="@cat.Id">@cat.Name (@cat.Breed?.Name)</option>

@@ -30,7 +30,7 @@
 
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small" role="alert"></div>
 
-        <form asp-action="Create">
+        <form asp-action="Create" method="post" enctype="multipart/form-data">
 
             <div class="mb-3">
                 <label asp-for="Name" class="form-label fw-semibold"></label>
@@ -59,7 +59,8 @@
 
             <div class="mb-3">
                 <label asp-for="BirthDate" class="form-label fw-semibold"></label>
-                <input asp-for="BirthDate" class="form-control" type="date" />
+                <input asp-for="BirthDate" class="form-control" type="date"
+                       max="@DateTime.Today.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="BirthDate" class="text-danger small"></span>
             </div>
 
