@@ -1,6 +1,7 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 COPY . .
+RUN rm -rf CatShelterTest
 RUN dotnet publish CatShelter.csproj -c Release -o out
 
 # Runtime stage
